@@ -11,16 +11,17 @@ AnyERPTools-electron/
 ├── preload.js        # Script preload (isolation de contexte sécurisée)
 ├── index.html         # Votre interface d'origine (inchangée)
 └── .gitignore
+└── test
+    └── package.json
+    └── main.js
+    └── preload.js
+    └── index.html
 ```
 
 ## Installation
 
-Prérequis : [Node.js](https://nodejs.org/) installé.
-
-```bash
-cd AnyERPTools-electron
-npm install
-```
+Prérequis : [Node.js](https://nodejs.org/) installé en version portable.
+Système Windows uniquement
 
 ## Lancer l'application en développement
 
@@ -28,15 +29,12 @@ npm install
 npm start
 ```
 
-## Générer un exécutable (Windows / macOS / Linux)
+## Lancer l'application
 
-```bash
-npm run dist
-```
-
-Le résultat sera disponible dans le dossier `dist/`.
+Il existe deux fichiers batch pour lancer le projet.
+run.bat pour lancer l'application sans être en test
+runTest.bat pour lancer l'application en test
 
 ## Notes
 
-- L'interface (`index.html`) charge Bootstrap, jQuery et Toastr depuis des CDN externes (jsdelivr / cloudflare). Une connexion internet est donc nécessaire au lancement. Si vous souhaitez une application 100% hors-ligne, il faudra télécharger ces librairies et les référencer en local dans `index.html`.
-- Aucune fonctionnalité de sauvegarde sur disque n'était présente dans le fichier HTML d'origine (l'outil utilise uniquement le presse-papier et la lecture de fichiers via `FileReader`), donc le `preload.js` n'expose rien de plus pour l'instant. Il est prêt à être étendu si vous souhaitez par exemple ajouter un bouton "Enregistrer le code généré dans un fichier".
+Il est impératif de travailler dans le dossier test avant de faire un copier coller du fichier index.html dans le dossier parent
