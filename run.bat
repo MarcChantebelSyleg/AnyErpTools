@@ -1,4 +1,6 @@
 @echo off
 set "PATH=%~dp0NodeJS;%PATH%"
 cd /d "%~dp0"
-npm start
+
+call npm install
+call npm start
