@@ -23,12 +23,6 @@ AnyERPTools-electron/
 Prérequis : [Node.js](https://nodejs.org/) installé en version portable.
 Système Windows uniquement
 
-## Lancer l'application en développement
-
-```bash
-npm start
-```
-
 ## Lancer l'application
 
 Il existe deux fichiers batch pour lancer le projet.
