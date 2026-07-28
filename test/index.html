@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <title>Boite d'outils AnyERP</title>
+    </header>
+    <body>
+        <div class="modal fade" id="codeGeneratedModal" tabindex="-1" role="dialog" aria-labelledby="codeGeneratedModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="codeGeneratedModalLabel" class="text-center w-100">Code AnyERP généré</h5>
+                </div>
+                <div class="modal-body">
+                    <code id="codeGenerated" contenteditable="true"></code>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="codeGeneratedModal">Close</button>
+                    <button id="applyOnCopy" type="button" class="btn btn-primary">Appliquer cette version au presse-papier</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="toolsTooChoose">
+            <div class="toolTooChoose text-center" data-panel="anyErpCodeFormatter">
+                <span>Formatteur de ligne de code AnyERP</span>
+            </div>
+            <div class="toolTooChoose text-center" data-panel="csvBaswareFormatter">
+                <span>Générateur d'inserts multiples depuis un fichier CSV</span>
+            </div>
+            <div class="toolTooChoose text-center" data-panel="xmlDuplicateDetector">
+                <span>Détecteurs de doublons XML</span>
+            </div>
+            <div class="toolTooChoose text-center" data-panel="historicImportTool">
+                <span>Import d'historique</span>
+            </div>
+        </div>
+        <div id="anyErpCodeFormatter">
+            <form id="anyErpCodeFormatterForm" method="post" action="/">
+                <input id="anyErpLine" type="text" placeholder="Insérer la ligne AnyERP ici ..." />
+            </form>
+            <div id="resultContainer" style="display: none;">
+                <button id="paste">Copier la chaine en format AnyERP</button>
+                <blockquote id="result" contenteditable></blockquote>
+            </div>
+        </div>
+        <div id="csvBaswareFormatter" class="d-none">
+            <form id="formCsvBaswareFormatter" method="post" action="/">
+                <div class="text-center">
+                    <div>
+                        <span id="importCsvFile">Importer un fichier CSV</span>
+                        <input id="csvFile" class="d-none" type="file" accept="text/csv" />
+                    </div>
+                    <div style="text-align: right;">
+                        <span id="textualRead">Lire un contenu textuel</span>
+                        <textarea id="csvStrings" type="text" placeholder="Insérez ici le contenu de votre fichier csv"></textarea>
+                    </div>
+                </div>
+
+                <div id="processSqlRequestCreationPanel">
+                    <input id="launchSqlRequestCreation" class="btn" type="submit" value="Lancer le traitement" />
+                    <div id="sqlRequestCreationOptions">
+                        <h6 class="text-center">Options d'extraction</h6>
+                        <div id="sqlRequestCreationOptionsHeader">
+                            <input id="tableName" type="text" placeholder="Nom de la table à remplir" required />
+                            <div>
+                                <div>
+                                    <input id="headerDataAlreadyExist" class="extractOption" type="checkbox" checked />
+                                    <span>Données d'en tête existantes</span>
+                                </div>
+                                <div>
+                                    <input id="eraseIdColumn" class="extractOption" type="checkbox" checked />
+                                    <span>Vider la colonne d'ID</span>
+                                </div>
+                                <div>
+                                    <input id="generateSupportFile" type="checkbox">
+                                    <span>Générer le fichier de support</span>
+                                </div>
+                                <div>
+                                    <input id="addDeleteBeforeInsert" type="checkbox">
+                                    <span>Vider la table en amont</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input id="methodName" type="text" value="AnyERPTreatmentSingleShot" placeholder="Nom de la méthode AnyERP" required />
+                        <div id="headerLines"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="xmlDuplicateDetector" class="d-none">
+            <input id="duplicateXmlBaseObject"  type="text" placeholder="Noeud de document enfant à inspecter" />
+            <input id="duplicateXMLTargetFields" type="text" placeholder="Champs à cibler (séparés par une virgule)" />
+            
+            <form id="XmlFileForm">
+                <input id="XmlFile" type="file" accept=".xml,.csv" multiple />
+            </form>
+
+            <p id="XmlDuplicateOutput"></p>
+        </div>
+        <div id="historicImportTool" class="d-none">
+            <form id="historicInput1">
+                <input id="historicFileOrganizations" type="file" type="text/xml" class="d-none" />
+            </form>
+            <form id="historicInput2"></form>
+                <input id="historicFileAllDatas" type="file" type="text/xml" class="d-none" />
+            </form>
+
+            <div>
+                <button id="CallHistoricFileOrganizations" type="button">Choisir les organisations sur lesquelles s'effectuera la copie</button>
+                <input id="selectAll" type="checkbox" />
+                <label>Tout sélectionner</label>
+            </div>
+
+            <button id="CallHistoricFileAllDatas" class="d-none" type="button">Lancer la copie pour chacune des organisation</button>
+
+            <input id="newTenantName" type="text" placeholder="Entrez le nom du tenant ici ..." /> 
+            <div id="organizationsSelection"></div>
+        </div>
+    </body>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" />
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #0000002e;
+        }
+
+        #toolsTooChoose {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            margin-bottom: 30px;
+            padding-top: 20px;
+            border-bottom: 2.5px solid black;
+            width: 90%;
+            margin-left: 5%;
+            border-radius: 10px;
+            box-shadow: 0px 1px 0px;
+        }
+
+        .toolTooChoose {
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .toolTooChoose span {
+            width: 60%;
+            display: block;
+            margin-left: 20%;
+            padding: 5px 10px;
+            background-color: #14144c;
+            border-radius: 6px;
+            color: white;
+        }
+
+        form {
+            width: 100%;
+        }
+
+        #resultContainer {
+            width: 70%;
+            margin-left: 15%;
+        }
+
+        #textualRead {
+            margin-top: -20px;
+            display: inline-block;
+        }
+
+        #importCsvFile {
+            cursor: pointer;
+        }
+
+        #formCsvBaswareFormatter > div:first-child, #processSqlRequestCreationPanel {
+            display: grid;
+            grid-template-columns: 20% 78%;
+            align-items: center;
+            margin-top: 90px;
+        }
+
+        #sqlRequestCreationOptionsHeader {
+            display: grid;
+            grid-template-columns: 70% 30%;
+            align-items: center;
+        }
+
+        #sqlRequestCreationOptionsHeader input[type="text"] {
+            margin: 0;
+            height: 45px;
+            width: 97%;
+        }
+
+        #formCsvBaswareFormatter textarea {
+            margin-top: -20px;
+            display: inline-block;
+            width: 62%;
+            margin-bottom: -21px;
+            margin-left: 32px;
+            border: none;
+        }
+
+        .headerData {
+            background-color: #00000003;
+        }
+
+        h6 {
+            color: white;
+            text-shadow: 2px 1px 6px black;
+        }
+
+        #launchSqlRequestCreation {
+            width: 60%;
+            margin-left: 20%;
+            background-color: #14144c9e;
+            color: white;
+            font-style: italic;
+        }
+
+        #sqlRequestCreationOptions h6 {
+            color: #14144c;
+            text-shadow: none;
+            font-weight: bold;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        #headerLines {
+            display: grid;
+            grid-template-columns: repeat(4, 25%);
+            padding-top: 5px;
+        }
+
+        #headerLines input {
+            padding-left: 10px;
+            white-space: nowrap; /* Prevent line breaks */
+            overflow: hidden; /* Hide elements that may overflow */
+            text-overflow: ellipsis; /* Request an ellipsis */
+            font-size: 13.3px;
+            border: none;
+            padding-bottom: 7px;
+        }
+
+        #headerLines input.headerDataDefaultValue, #headerLines .buttonReplaceValues {
+            width: 95%;
+        }
+
+        #headerLines .buttonReplaceValues {
+            background-color: #14144c;
+            border-color: #14144c
+        }
+
+        #headerLines .deleteHeader, #headerLines .leaveBlankHeader {
+            position: absolute;
+            margin-left: -270px;
+            margin-top: -33px;
+            cursor: pointer;
+            background-color: white;
+            border-radius: 360px;
+            font-weight: bold;
+            width: 20px;
+            height: 20px;
+            text-align: -webkit-center;
+            font-size: 13px;
+        }
+
+        #headerLines .leaveBlankHeader {
+            margin-top: -15px
+        }
+
+        #headerLines input:focus {
+            border: none !important;
+        }
+
+        #methodName {
+            margin: 10px 0 0 0;
+            width: 100%;
+        }
+
+        input[type="text"] {
+            width: 60%;
+            margin: 40px 20%;
+            padding: 10px;
+            border-radius: 6px;
+            display: block;
+            color: #14144c;
+            font-style: italic;
+            font-size: 13px;
+            border-color: #14144c;
+        }
+
+        .replaceSpecificValues {
+            display: grid;
+            grid-template-columns: 50% 50%;
+        }
+
+        .replaceSpecificValues input[type="text"] {
+            width: 100%;
+            margin: 3px 0;
+        }
+
+        .replaceSpecificValues .deleteValuesReplace {
+            position: absolute;
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 20px;
+            border: 8px solid black;
+            margin-top: -8px;
+            margin-left: -5px;
+        }
+
+        #result {
+            padding: 10px;
+            border: 2px solid #14144c;
+            border-radius: 10px;
+            box-shadow: 1px 1px 1px 1px #14144c inset;
+            color: #14144c;
+            font-weight: 600;
+        }
+
+        #paste {
+            transition-property: background-color, color;
+            transition-timing-function: linear;
+            transition-duration: 0.2s;
+            right: 15%;
+            position: absolute;
+            margin-top: -16px;
+            padding: 10px 8px;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            box-shadow: 1px 1px 4px #14144c;
+        }
+
+        #paste:hover {
+            transition-property: background-color, color;
+            transition-timing-function: linear;
+            transition-duration: 0.2s;
+            background-color: #14144c;
+            color: white;
+        }
+
+        #formatError {
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        blockquote#result pre:nth-child(1n+1) {
+            margin: 0;
+        }
+
+        #CallHistoricFileOrganizations, #CallHistoricFileAllDatas {
+            margin-left: 28%;
+            background-color: #0d0d12;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #CallHistoricFileAllDatas {
+            display: block;
+            margin-top: 10px;
+            margin-left: 36%;
+        }
+
+        #selectAll {
+            margin: 0 5px;
+        }
+
+        #newTenantName {
+            display: block;
+            width: 90%;
+            margin: 35px 0 15px 5%;
+            border-radius: 8px;
+            border: 2px solid #0d0d12;
+            box-shadow: 1px 1px 4px #0d0d12;
+        }
+
+        #organizationsSelection {
+            display: grid;
+            grid-template-columns: repeat(5, 20%);
+            padding: 30px;
+        }
+
+        #organizationsSelection input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        #organizationsSelection .historicOrganizationName {
+            font-weight: bold;
+            font-size: 13px;
+            font-style: italic;
+            margin-left: 6px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script id="functions">
+        function formatBaseware(input) {
+            const TAB = "    ";
+            let pos = 0;
+            const N = input.length;
+
+            // helpers pour lire sans perdre position
+            function peek(n = 0) { return input[pos + n]; }
+            function eof() { return pos >= N; }
+
+            function skipSpacesOutsideQuotes() {
+                while (!eof() && /\s/.test(peek())) pos++;
+            }
+
+            function readWhile(predicate) {
+                let s = "";
+                while (!eof() && predicate(peek())) s += input[pos++]; 
+                return s;
+            }
+
+            function readIdent() {
+                return readWhile(ch => /[A-Za-z0-9_]/.test(ch));
+            }
+
+            function readQuoted() {
+                // lit une chaîne entre guillemets "..." (les guillemets inclus)
+                let s = "";
+                if (peek() === '"') {
+                    s += input[pos++]; // "
+                    while (!eof()) {
+                        const ch = peek();
+                        s += ch;
+                        pos++;
+                        if (ch === '"') break;
+                    }
+                }
+                return s;
+            }
+
+            function readEntity() {
+                // lit &...;
+                let s = "";
+                if (peek() === '&') {
+                    while (!eof()) {
+                        s += input[pos++];
+                        if (s.endsWith(';')) break;
+                    }
+                }
+                return s;
+            }
+
+            // ----- PARSING -----
+            // Node types: {type: 'func', name: 'AND', args: [...]}
+            //             {type: 'token', text: 'p,Pattern'}  (plain token)
+            function parseFunction() {
+                // on suppose pos pointe sur 'F' et input[pos+1] === ','
+                pos += 2; // skip "F,"
+                const name = readIdent();
+                // accepter éventuels espaces puis '('
+                while (!eof() && /\s/.test(peek())) pos++;
+                if (peek() === '(') pos++;
+
+                const args = parseArgsUntilClose();
+                return { type: 'func', name, args };
+            }
+
+            function parseArgsUntilClose() {
+                const args = [];
+                let buf = "";
+
+                function flushBufAsToken() {
+                    const t = buf.trim();
+                    if (t.length > 0) {
+                        args.push({ type: 'token', text: t });
+                    }
+                    buf = "";
+                }
+
+                while (!eof()) {
+                    const ch = peek();
+
+                    // début d'une fonction imbriquée
+                    if (ch === 'F' && peek(1) === ',') {
+                        flushBufAsToken();
+                        const fn = parseFunction();
+                        args.push(fn);
+                        continue;
+                    }
+
+                    // guillemet
+                    if (ch === '"') {
+                        buf += readQuoted();
+                        continue;
+                    }
+
+                    // entité XML
+                    if (ch === '&') {
+                        buf += readEntity();
+                        continue;
+                    }
+
+                    // point-virgule : séparateur d'argument AU NIVEAU ACTUEL
+                    if (ch === ';') {
+                        // le ; sépare : on flush le buffer comme argument (si présent)
+                        flushBufAsToken();
+                        // on marque implicitement le séparateur en ajoutant un token spécial
+                        // mais pour la simplicité on conserve la logique de rendu : les tokens non-last recevront un ';'
+                        pos++; // consommer ;
+                        continue;
+                    }
+
+                    // parenthèse fermante => fin des args pour cette fonction
+                    if (ch === ')') {
+                        flushBufAsToken();
+                        pos++; // consommer ')'
+                        return args;
+                    }
+
+                    // accolades ne sont pas attendues ici mais on les gère (sûreté)
+                    if (ch === '{' || ch === '}') {
+                        // flush si besoin et retourner / continuer
+                        flushBufAsToken();
+                        // ne consommerons pas ces accolades ici (caller les traitera)
+                        return args;
+                    }
+
+                    // espace hors guillemets : on l'ignore
+                    if (/\s/.test(ch)) { pos++; continue; }
+
+                    // caractère normal -> accumulate
+                    buf += ch;
+                    pos++;
+                }
+
+                // fin de chaîne : flush
+                flushBufAsToken();
+                return args;
+            }
+
+            // parse root : accepte une accolade ouvrante optionnelle
+            pos = 0;
+            skipSpacesOutsideQuotes();
+            let hadBrace = false;
+            if (!eof() && peek() === '{') { pos++; hadBrace = true; }
+
+            // si pas d'accolade initiale, on peut tenter de parser une fonction ou le contenu
+            let rootNodes = [];
+            while (!eof()) {
+                skipSpacesOutsideQuotes();
+                if (eof()) break;
+                if (peek() === '}') { pos++; break; }
+                if (peek() === 'F' && peek(1) === ',') {
+                    rootNodes.push(parseFunction());
+                    continue;
+                }
+                // sinon avancer d'un caractère pour éviter boucle infinie
+                pos++;
+            }
+
+            // ----- RENDERING -----
+            function renderNode(node, level = 0) {
+                const lines = [];
+                const indent = s => TAB.repeat(s);
+
+                if (node.type === 'func') {
+                    lines.push(indent(level) + `F,${node.name}(`);
+                    // render args: each arg printed; if arg is token and not last -> add ';'
+                    const args = node.args;
+                    for (let ai = 0; ai < args.length; ai++) {
+                        const a = args[ai];
+                        const isLast = (ai === args.length - 1);
+                        if (a.type === 'func') {
+                            // nested function: render its whole block (it will end with ");")
+                            const nested = renderNode(a, level + 1);
+                            lines.push(...nested);
+                        } else { // token
+                            // token text may contain commas (p,Pattern) or operators (=, <> ...)
+                            const text = a.text;
+                            lines.push(indent(level + 1) + text + (isLast ? "" : ";"));
+                        }
+                    }
+                    lines.push(indent(level) + ");");
+                } else { // token node at root (rare)
+                    lines.push(indent(level) + node.text);
+                }
+
+                return lines;
+            }
+
+            // render all root nodes inside braces
+            const outLines = [];
+            if (hadBrace) outLines.push("{");
+            for (let n = 0; n < rootNodes.length; n++) {
+                const node = rootNodes[n];
+                const rendered = renderNode(node, hadBrace ? 1 : 0);
+                outLines.push(...rendered);
+            }
+            if (hadBrace) outLines.push("}");
+
+            return "<pre>" + outLines.join("\n") + "</pre>";
+        }
+        
+        function r1fl(s) {
+            return s.substring(0, s.length - 1);
+        }
+
+        function fEl1P(el1) {
+            return el1.replace(/""/gm, '"');
+        }
+
+        function formatLineToDetectBaswareCode(allLinesParam) {
+            let newLine = [];
+            let tempLine = "";
+            let pause = false;
+
+            for (const el of allLinesParam) {
+                const el1 = el.toString();
+
+                if (el1.startsWith('"\\{')) {
+                    tempLine = `\\${fEl1P(el1.substring(1))};`;
+                    pause = true;
+                }
+                else if (el1.endsWith('\\}"')) {
+                    tempLine += `${fEl1P(el1.substring(0, el1.length - 3))}\\\\}`;
+                    newLine.push(tempLine);
+                    tempLine = "";
+                    pause = false;
+                }
+                else if (pause) tempLine += `${fEl1P(el1)};`
+                else newLine.push(fEl1P(el1));
+            }
+
+            return newLine;
+        }
+
+        function generateColumns(csvContent) {
+            let allLines = csvContent.split("\n");
+
+            const firstLine = [...allLines[0].split(";")];
+            const headerDatasExist = headerDataAlreadyExist.checked;
+            const eraseIdColumnChecked = eraseIdColumn.checked;
+
+            headerLines.innerHTML = "";
+
+            for (let i = 0; i < firstLine.length; i++) {
+                const div = document.createElement("div");
+                const input = document.createElement("input");
+                input.classList.add("headerData");
+                input.setAttribute("data-index", i);
+                input.setAttribute("placeholder", "Entrez ici le nom de la colonne");
+                input.value = headerDatasExist ? firstLine[i].replace(/["]/g, "") : "";
+
+                const input1 = document.createElement("input");
+                input1.classList.add("headerDataDefaultValue");
+                input1.setAttribute("data-index", i);
+                input1.placeholder = "Valeur forcée (optionnel)";
+
+                const deleteHeader = document.createElement("span");
+                deleteHeader.textContent = "x";
+                deleteHeader.classList.add("deleteHeader");
+                deleteHeader.setAttribute("data-index", i);
+                deleteHeader.title = "Cliquez ici pour desactiver l'insertion de ce champ dans chaque inert";
+
+                deleteHeader.addEventListener("click", (evt) => {
+                    document.querySelector(`.headerData[data-index="${i}"]`).setAttribute("disabled", "");
+                }, false);
+
+                const leaveBlank = document.createElement("span");
+                leaveBlank.textContent = "B";
+                leaveBlank.classList.add("leaveBlankHeader");
+                leaveBlank.setAttribute("data-index", i);
+                leaveBlank.title = "Cliquez ici pour forcer une valeur vide";
+
+                leaveBlank.addEventListener("click", (evt) => {
+                    document.querySelector(`.headerData[data-index="${i}"]`).setAttribute("blank", "");
+                }, false);
+
+                const buttonReplaceValues = document.createElement("button");
+                buttonReplaceValues.classList.add("buttonReplaceValues");
+                buttonReplaceValues.innerText = "Remplacer des valeurs";
+                buttonReplaceValues.style = "margin-top: 10px";
+
+                buttonReplaceValues.addEventListener("click", (e) => {
+                    displayReplaceValues(e.currentTarget.parentNode);
+                    e.preventDefault();
+                }, false);
+
+                const divReplaceValues = document.createElement("div");
+                divReplaceValues.classList.add("ContainerReplaceSpecificValues");
+
+                div.appendChild(input);
+                div.appendChild(input1);
+                div.appendChild(deleteHeader);
+                div.appendChild(leaveBlank);
+                div.appendChild(buttonReplaceValues);
+                div.appendChild(divReplaceValues);
+                headerLines.append(div);
+            }
+        }
+
+        function displayReplaceValues(dom) {
+            const divToAppend = dom.getElementsByClassName("ContainerReplaceSpecificValues")[0];
+
+            const div = document.createElement("div");
+            div.classList.add("replaceSpecificValues");
+
+            const span = document.createElement("span");
+            span.innerText = "x";
+            span.classList.add("deleteValuesReplace");
+            span.addEventListener("click", (evt) => {
+                evt.currentTarget.parentNode.remove();
+            }, false);
+
+            const replaceValueLeft = document.createElement("input");
+            replaceValueLeft.type = "text";
+            replaceValueLeft.placeholder = "Chercher ...";
+            replaceValueLeft.classList.add("replaceValuesLeft");
+
+            const replaceValueRight = document.createElement("input");
+            replaceValueRight.type = "text";
+            replaceValueRight.placeholder = "Remplacer par ...";
+            replaceValueRight.classList.add("replaceValuesLeft");
+
+            div.appendChild(span);
+            div.appendChild(replaceValueLeft);
+            div.appendChild(replaceValueRight);
+            divToAppend.appendChild(div);
+        }
+
+        function getLineValueValueReplaced(i, lineValue) {
+            const allInputsLeft = document.querySelectorAll(`#headerLines + div:nth-child(0n + ${i}) .replaceValuesLeft`);
+            const allInputsRight = document.querySelectorAll(`#headerLines + div:nth-child(0n + ${i}) .replaceValuesRight`);
+            let lineValueModified = "";
+
+            for (let a = 0; a < allInputsLeft.length; a++) {
+                if (allInputsLeft[a].value == lineValue) lineValueModified = allInputsRight[a].value;
+            }
+
+            return lineValueModified;
+        }
+
+        function getColumnSubDetails(i, lineValue) {
+            const subDetails = {
+                disabled:
+                    document.querySelector(`.headerData[data-index="${i}"]`).
+                    getAttribute("disabled") != null,
+                defaultValue:
+                    document.querySelector(`.headerDataDefaultValue[data-index="${i}"]`).
+                    value,
+                leaveBlank: document.querySelector(`.headerData[data-index="${i}"]`).
+                    getAttribute("blank") != null
+            };
+
+            const lineValueValueReplaced = getLineValueValueReplaced(i, lineValue);
+            if (lineValueValueReplaced != '') subDetails.defaultValue = lineValueValueReplaced;
+
+            return subDetails;
+        }
+
+        function getLastPart(headerColumn, valueColumn, subDetails) {
+            if (headerColumn == "ID" && eraseIdColumn.checked) return "to_char(DBMS_RANDOM.value(0, power(2, 128)-1), 'FM0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'), ";
+
+            const finalColumnValue = valueColumn.replace(/[']/g, "''").replace(/["]/g, "'");
+            if (finalColumnValue.length > 0 && !subDetails.leaveBlank) {
+                if (subDetails.defaultValue.length == 0) return `${finalColumnValue}, `;
+                return `'${subDetails.defaultValue}', `;
+            };
+
+            return "'', ";
+        }
+
+        function generateCode(fullLine) {
+            const deleteBeforeInsertIsChecked = document.getElementById("addDeleteBeforeInsert").checked;
+            let codeGenerated = `<section name="${methodName.value}">`;
+
+            if (deleteBeforeInsertIsChecked) {
+                codeGenerated += `<method name="${methodName.value}DeleteBefore">
+                    <builtInMethodParameterList name="bw_db_functions" driver="provider">	
+                        <parameter name="connectionstring" log="False">{v,connstr}</parameter>
+                        <parameter name="dataProvider">{v,dataprovider}</parameter>
+                        <parameter name="assemblyName">{v,assemblyname}</parameter>
+                        <parameter name="prefix">{v,BoundVariableChar}</parameter>       
+                        <parameter name="command">	
+                            <![CDATA[
+                                DELETE FROM ${tableName.value}
+                            ]]>
+                        </parameter>
+                    </builtInMethodParameterList>
+                </method>`
+            }
+
+            codeGenerated += `<method name="${methodName.value}Method">
+                    <builtInMethodParameterList name="bw_db_functions" driver="provider">	
+                        <parameter name="connectionstring" log="False">{v,connstr}</parameter>
+                        <parameter name="dataProvider">{v,dataprovider}</parameter>
+                        <parameter name="assemblyName">{v,assemblyname}</parameter>
+                        <parameter name="prefix">{v,BoundVariableChar}</parameter>       
+                        <parameter name="command">	
+                            <![CDATA[
+                                INSERT ALL
+                                ${fullLine}
+                                SELECT 1 FROM DUAL	
+                            ]]>
+                        </parameter>
+                    </builtInMethodParameterList>
+                </method>
+            </section>`;
+
+            return codeGenerated;
+        }
+
+        function formatInputCsv(csvContent) {
+            let allLines = csvContent.split("\n");
+            const headerColumns = document.getElementsByClassName("headerData");
+            const eraseIdColumnChecked = eraseIdColumn.checked;
+
+            if (headerDataAlreadyExist) allLines = allLines.slice(1);
+
+            for (let i = 0; i < allLines.length; i++)
+                allLines[i] = formatLineToDetectBaswareCode(r1fl(allLines[i]).split(";"));    
+
+            let fullLine = "";
+            for (const lineData of allLines.splice(0, allLines.length - 1)) {
+                let firstPart = lastPart = "";
+
+                for (let i = 0; i < lineData.length; i++) {
+                    const subDetails = getColumnSubDetails(i, lineData[i]);
+
+                    if (!subDetails.disabled) {
+                        firstPart += `${headerColumns[i].value}, `;
+                        lastPart += getLastPart(headerColumns[i].value, lineData[i], subDetails);
+                    }
+                }
+
+                firstPart = firstPart.substring(0, firstPart.length - 2);
+                lastPart = lastPart.substring(0, lastPart.length - 2);
+
+                fullLine += `INTO ${tableName.value}(${firstPart}) VALUES(${lastPart})\n`;
+            }
+
+            const codeGenerated = generateCode(fullLine);
+            if (!generateSupportFile.checked) {
+                navigator.clipboard.writeText(codeGenerated);
+
+                $("#codeGeneratedModal").modal("show");
+                document.getElementById("codeGenerated").innerText = codeGenerated;
+
+                toastr.info(`Méthode AnyERP "${methodName.value}" écrite dans le presse-papier. Une modale est ouverte si pour modifier ce qui à été généré en cas de besoin.`);
+            } else
+                saveGeneratedSupportFile(`<?xml version="1.0" encoding="UTF-8"?>
+<!--Version 2.4 of the Customer Resolver Configuration File  -->
+<erpConnector>
+    <sections>
+        ${codeGenerated}
+    </sections>
+</erpConnector>
+`, "InvoicePro_Customer_Support.xml");
+
+            //Flush all form datas
+            formCsvBaswareFormatter.reset();
+            headerLines.innerHTML = "";
+        }
+
+        async function saveGeneratedSupportFile(content, defaultName) {
+            if (!window.electronAPISupport) {
+                toastr.error("La sauvegarde de fichier n'est disponible que dans l'application Electron");
+                return;
+            }
+
+            try {
+                const result = await window.electronAPISupport.saveSupportFile(content, defaultName);
+
+                if (result.success) {
+                    toastr.success(`Fichier de support enregistré : ${result.filePath}`);
+                } else if (!result.canceled) {
+                    toastr.error(`Échec de l'enregistrement : ${result.error}`);
+                }
+            } catch (err) {
+                toastr.error(`Échec de l'enregistrement : ${err.message}`);
+            }
+        }
+
+        function readCsvFile(fnToCallAfter) {
+            fr = new FileReader();
+            fr.readAsText(csvFile.files[0]);
+            fr.onload = function() {
+                fnToCallAfter(this.result);
+            }
+        }
+
+        function getFieldParsed() {
+            return document.getElementById("duplicateXMLTargetFields").value.toLowerCase()
+                .split(",")
+                .map(f => f.trim())
+                .filter(f => f.length > 0)
+        }
+
+        function generateHashLineForSpecificFieldsCSV(csvLine, fields, headers) {
+            let fullString = "";
+
+            for (const field of fields) {
+                fullString += csvLine[headers.indexOf(field)];
+            }
+
+            return fullString;
+        }
+
+        function generateHashLineForSpecificFieldsXml(item, fields) {
+            let fullString = "";
+
+            for (const field of fields) {
+                fullString += item.getElementsByTagName(field)[0];
+            }
+
+            return fullString;
+        }
+
+        function findCSVDuplicates(csvContent, fields, filename) {
+            const allLines = csvContent.split("\n");
+            let headers = allLines[0].toLowerCase().split(";");
+            let otherLines = allLines.slice(1);
+
+            let allHash = "";
+            const duplicates = [];
+
+            otherLines.forEach((line, index) => {
+                const myHash = generateHashLineForSpecificFieldsCSV(line.split(";"), fields, headers);
+
+                if (allHash.indexOf(myHash) == -1) allHash += myHash;
+                else duplicates.push(index);
+            });
+
+            return duplicates;
+        }
+
+        function findXmlDuplicates(xmlContent, fields) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+
+            if (xmlDoc.querySelector("parsererror")) {
+                throw new Error("XML invalide");
+            }
+
+            const items = Array.from(xmlDoc.getElementsByTagName(
+                document.getElementById("duplicateXmlBaseObject").value
+            ));
+
+            const allHash = [];
+            const duplicates = [];
+
+            items.forEach((item, index) => {
+                const myHash = generateHashLineForSpecificFieldsXml(item, fields);
+
+                if (allHash.indexOf(myHash) == -1) allHash.push(myHash);
+                else duplicates.push(index);
+            });
+
+            return duplicates;
+        }
+
+        function displayDuplicates(duplicates) {
+            let duplicatesStr = "";
+            
+            for (const duplicate of duplicates) {
+                duplicatesStr += "<p>Ligne ou objet dupliqué ayant comme position la " + duplicate + "</p><br />"
+            }
+
+            return duplicatesStr;
+        }
+
+        function readFilesToSearchDuplicate(index, files, fields) {
+            const file = files[index];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                try {
+                    const duplicates = file.name.endsWith(".xml") ?
+                        findXmlDuplicates(e.target.result, fields) :
+                        findCSVDuplicates(e.target.result, fields, file.name);
+                    output.innerHTML = "<p>Fichier " + file.name  + "</p>"
+                    if (duplicates.length === 0) {
+                        output.innerHTML += "<p>✅ Aucun doublon trouvé.</p>";
+                    } else {
+                        output.innerHTML += "<p>⚠️ Doublons détectés :</p><br /><br />" +
+                        displayDuplicates(duplicates);
+                    }
+
+                    if (index < files.length - 1) readFilesToSearchDuplicate(++index, files);
+                    else document.getElementById("XmlFileForm").reset();
+                } catch (err) {
+                    output.textContent = "Erreur : " + err.message;
+                }
+            };
+
+            reader.readAsText(files[index]);
+        }
+        
+        function processDuplicatesObjectsFile(fileInput, fieldsInput) {
+            output.innerHTML = "";
+
+            const files = fileInput.files;
+            if (files.length == 0) {
+                output.textContent = "Veuillez sélectionner un fichier XML.";
+                return;
+            }
+            
+            readFilesToSearchDuplicate(0, files, getFieldParsed());
+        }
+    
+        function displayOrganizationBlocToChoose(organization, organizationsSelection) {
+            const div = document.createElement("div");
+            div.classList.add("organizationSelected");
+            div.setAttribute("data-chosed", selectAll.checked ? "1" : "0");
+            div.setAttribute("data-id", organization.Id[0]);
+            div.setAttribute("data-name", organization.Name[0]);
+            div.setAttribute("data-parent-id", organization.ParentId[0]);
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = selectAll.checked;
+            checkbox.addEventListener("click", (e) => {
+                const chosed = e.currentTarget.parentNode.getAttribute("data-chosed");
+
+                if (chosed == 0) e.currentTarget.parentNode.setAttribute("data-chosed", "1");
+                else e.currentTarget.parentNode.setAttribute("data-chosed", "0");
+            });
+
+            div.appendChild(checkbox);
+
+            const organizationName = document.createElement("span");
+            organizationName.classList.add("historicOrganizationName");
+            organizationName.innerText = organization.Name;
+            div.appendChild(organizationName);
+
+            organizationsSelection.append(div);
+        }
+        
+        function displayAllOrganizations(json) {
+            const firstKey = Object.keys(json)[0];
+            const organizationsSelection = document.getElementById("organizationsSelection");
+
+            organizationsSelection.innerHTML = "";
+            for (const organization of json[firstKey].ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT) {
+                displayOrganizationBlocToChoose(organization, organizationsSelection);
+            }
+
+            CallHistoricFileAllDatas.setAttribute("class", "");
+        }
+
+        function takeJsonData(allTags, i, jsonBase, companyName) {
+             const result = {isOk: false, data: null};
+
+             return result;
+        }
+
+        function getTagBefore(key) {
+            switch (key) {
+                case "CMN_ENTITY_CONFIG":
+                    return ["CMN_ENTITY_CONFIG_TABLE"];
+                case "INVOICE_PROCESS":
+                    return ["INVOICE_PROCESS_TABLE"];
+                case "INVOICE_ACTIVITY":
+                    return ["INVOICE_ACTIVITY_TABLE"];
+                case "INVOICE_RECIPIENTRESOLVER":
+                    return ["INVOICE_RECIPIENTRESOLVER_TABLE"];
+                case "INVOICE_ACTIVITY_PARAMETER":
+                    return ["INVOICE_ACTIVITYPARAMETER_TABLE"];
+                case "INVOICE_TRANSITION":
+                    return ["INVOICE_TRANSITION_TABLE"];
+                case "EXT_IF_BASICDATA":
+                    return ["EXT_IF_BASICDATA_TABLE"];
+                case "EXT_IF_BASICDATA_MAPPINGS":
+                    return ["EXT_IF_BASICDATA_MAPPINGS_TABLE"];
+                case "EXT_IF_BASICDATA_CHILDNODES":
+                    return ["EXT_IF_BASICDATA_CHILDNODES_TABLE"];
+                case "EXT_IF_TRANSFER_RESP_ROUTINES":
+                    return ["EXT_IF_TRANSFER_RESP_ROUTINES_TABLE"];
+                case "EXT_IF_TRANSFER_MAPPINGS":
+                    return ["EXT_IF_TRANSFER_MAPPINGS_TABLE"];
+                case "EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE":
+                    return ["EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE"];
+                case "EXT_IF_TRANSFER_ROUTINES_TABLE":
+                    return ["EXT_IF_TRANSFER_ROUTINES_TABLE"];
+                case "EXT_IF_ORDERIMPORT_MAPPINGS":
+                    return ["EXT_IF_ORDERIMPORT_MAPPINGS_TABLE"];
+                case "EXT_IF_ORDERIMPORT_ROUTINES":
+                    return ["EXT_IF_ORDERIMPORT_ROUTINES_TABLE"];
+                case "ORGANIZATION_ELEMENTS":
+                    return ["ORGANIZATION_TREE_TABLE", "ORGANIZATION_ELEMENTS"];
+                default:
+                    throw new Exception("Erreur : aucune liste de noeux déclarée");
+            }
+        }
+
+        function generateFileInspectionArray(keys) {
+            let jsonArray = {};
+            
+            for (const key of keys) {
+                jsonArray[key] = {"datas" : [], "temp" : "", "tagsBefore": getTagBefore(key)};
+            }
+            
+            return jsonArray;
+        }
+
+        function generateFinalJsonBasicStructure() {
+            return generateFileInspectionArray([
+                "CMN_ENTITY_CONFIG", "INVOICE_PROCESS", "INVOICE_ACTIVITY", "INVOICE_RECIPIENTRESOLVER",
+                "INVOICE_ACTIVITY_PARAMETER", "INVOICE_TRANSITION", "EXT_IF_BASICDATA", "EXT_IF_BASICDATA_MAPPINGS",
+                "EXT_IF_BASICDATA_CHILDNODES", "EXT_IF_TRANSFER_RESP_ROUTINES", "EXT_IF_TRANSFER_MAPPINGS",
+                "EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE", "EXT_IF_TRANSFER_ROUTINES_TABLE", "EXT_IF_ORDERIMPORT_MAPPINGS",
+                "EXT_IF_ORDERIMPORT_ROUTINES", "ORGANIZATION_ELEMENTS"
+            ]);
+        }
+
+        function inspectFile(json, companyId, companyName) {
+            const firstTag = Object.keys(json);
+            const jsonBase = json[firstTag];
+            const datas = generateFinalJsonBasicStructure();
+
+            /* Invoice Process : START scanning */
+            for (let i = 0; i < jsonBase.INVOICE_PROCESS_TABLE[0].INVOICE_PROCESS.length; i++) {
+                if (jsonBase.INVOICE_PROCESS_TABLE[0].INVOICE_PROCESS[i].AdministrativeSiteId[0] == companyId) {
+                    datas.INVOICE_PROCESS.datas.push({... jsonBase.INVOICE_PROCESS_TABLE[0].INVOICE_PROCESS[i]});
+                    datas.INVOICE_PROCESS.temp += `pid*${jsonBase.INVOICE_PROCESS_TABLE[0].INVOICE_PROCESS[i].Id[0]}`;
+                }
+            }
+
+            for (let i = 0; i < jsonBase.INVOICE_ACTIVITY_TABLE[0].INVOICE_ACTIVITY.length; i++) {
+                if (datas.INVOICE_PROCESS.temp.indexOf(`pid*${jsonBase.INVOICE_ACTIVITY_TABLE[0].INVOICE_ACTIVITY[i].ProcessId[0]}`) !== -1) {
+                    datas.INVOICE_ACTIVITY.datas.push({... jsonBase.INVOICE_ACTIVITY_TABLE[0].INVOICE_ACTIVITY[i]});
+                    datas.INVOICE_ACTIVITY.temp += `pac*${jsonBase.INVOICE_ACTIVITY_TABLE[0].INVOICE_ACTIVITY[i].Id[0]}`;
+                }
+            }
+
+            for (let i = 0; i < jsonBase.INVOICE_RECIPIENTRESOLVER_TABLE[0].INVOICE_RECIPIENTRESOLVER.length; i++) {
+                if (datas.INVOICE_ACTIVITY.temp.indexOf(`pac*${jsonBase.INVOICE_RECIPIENTRESOLVER_TABLE[0].INVOICE_RECIPIENTRESOLVER[i].ActivityId[0]}`) !== -1) {
+                    datas.INVOICE_RECIPIENTRESOLVER.datas.push({... jsonBase.INVOICE_RECIPIENTRESOLVER_TABLE[0].INVOICE_RECIPIENTRESOLVER[i]});
+                }
+            }
+
+            for (let i = 0; i < jsonBase.INVOICE_ACTIVITYPARAMETER_TABLE[0].INVOICE_ACTIVITYPARAMETER.length; i++) {
+                if (datas.INVOICE_ACTIVITY.temp.indexOf(`pac*${jsonBase.INVOICE_ACTIVITYPARAMETER_TABLE[0].INVOICE_ACTIVITYPARAMETER[i].ActivityId[0]}`) !== -1) {
+                    datas.INVOICE_ACTIVITY_PARAMETER.datas.push({... jsonBase.INVOICE_ACTIVITYPARAMETER_TABLE[0].INVOICE_ACTIVITYPARAMETER[i]});
+                }
+            }
+
+            for (let i = 0; i < jsonBase.INVOICE_TRANSITION_TABLE[0].INVOICE_TRANSITION.length; i++) {
+                if (datas.INVOICE_PROCESS.temp.indexOf(`pid*${jsonBase.INVOICE_TRANSITION_TABLE[0].INVOICE_TRANSITION[i].ProcessId[0]}`) !== -1) {
+                    datas.INVOICE_TRANSITION.datas.push({... jsonBase.INVOICE_TRANSITION_TABLE[0].INVOICE_TRANSITION[i]});
+                }
+            }
+
+            /* Invoice Process : END scanning */
+
+            /* System Mapping : START scanning */ 
+            for (let i = 0; i < jsonBase.EXT_IF_BASICDATA_TABLE[0].EXT_IF_BASICDATA.length; i++) {
+                if (jsonBase.EXT_IF_BASICDATA_TABLE[0].EXT_IF_BASICDATA[i].ADMINISTRATIVE_SITE_ID[0] == companyId) {
+                    datas.EXT_IF_BASICDATA.datas.push({... jsonBase.EXT_IF_BASICDATA_TABLE[0].EXT_IF_BASICDATA[i]});
+                    datas.EXT_IF_BASICDATA.temp += `extba*${jsonBase.EXT_IF_BASICDATA_TABLE[0].EXT_IF_BASICDATA[i].Id[0]}`;
+                }
+            }
+
+            for (let i = 0; i < jsonBase.EXT_IF_BASICDATA_MAPPINGS_TABLE[0].EXT_IF_BASICDATA_MAPPINGS.length; i++) {
+                if (jsonBase.EXT_IF_BASICDATA_MAPPINGS_TABLE[0].EXT_IF_BASICDATA_MAPPINGS[i].ADMINISTRATIVE_SITE_ID[0] == companyId) {
+                    datas.EXT_IF_BASICDATA_MAPPINGS.datas.push({... jsonBase.EXT_IF_BASICDATA_MAPPINGS_TABLE[0].EXT_IF_BASICDATA_MAPPINGS[i]});
+                }
+            }
+
+            for (let i = 0; i < jsonBase.EXT_IF_BASICDATA_CHILDNODES_TABLE[0].EXT_IF_BASICDATA_CHILDNODES.length; i++) {
+                if (jsonBase.EXT_IF_BASICDATA_CHILDNODES_TABLE[0].EXT_IF_BASICDATA_CHILDNODES[i].ADMINISTRATIVE_SITE_ID[0] == companyId) {
+                    datas.EXT_IF_BASICDATA_CHILDNODES.datas.push({... jsonBase.EXT_IF_BASICDATA_CHILDNODES_TABLE[0].EXT_IF_BASICDATA_CHILDNODES[i]});
+                }
+            }
+
+            for (let i = 0; i < jsonBase.EXT_IF_TRANSFER_RESP_ROUTINES_TABLE[0].EXT_IF_TRANSFER_RESP_ROUTINES.length; i++) {
+                if (jsonBase.EXT_IF_TRANSFER_RESP_ROUTINES_TABLE[0].EXT_IF_TRANSFER_RESP_ROUTINES[i].ADMINISTRATIVE_SITE_ID[0] == companyId) {
+                    datas.EXT_IF_TRANSFER_RESP_ROUTINES.datas.push({... jsonBase.EXT_IF_TRANSFER_RESP_ROUTINES_TABLE[0].EXT_IF_TRANSFER_RESP_ROUTINES[i]});
+                }
+            }
+
+            for (let i = 0; i < jsonBase.EXT_IF_TRANSFER_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_MAPPINGS.length; i++) {
+                if (jsonBase.EXT_IF_TRANSFER_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_MAPPINGS[i].ADMINISTRATIVE_SITE_ID[0] == companyId) {
+                    datas.EXT_IF_TRANSFER_MAPPINGS.datas.push({... jsonBase.EXT_IF_TRANSFER_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_MAPPINGS[i]});
+                }
+            }
+
+            for (let i = 0; i < jsonBase.EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_RESP_MAPPINGS.length; i++) {
+                if (jsonBase.EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_RESP_MAPPINGS[i].ADMINISTRATIVE_SITE_ID[0] == companyId) {
+                    datas.EXT_IF_TRANSFER_RESP_MAPPINGS.datas.push({... jsonBase.EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_RESP_MAPPINGS[i]});
+                }
+            }
+
+            for (let i = 0; i < jsonBase.EXT_IF_TRANSFER_ROUTINES_TABLE[0].EXT_IF_TRANSFER_ROUTINES.length; i++) {
+                if (jsonBase.EXT_IF_TRANSFER_ROUTINES_TABLE[0].EXT_IF_TRANSFER_ROUTINES[i].ADMINISTRATIVE_SITE_ID[0] == companyId) {
+                    datas.EXT_IF_TRANSFER_ROUTINES.datas.push({... jsonBase.EXT_IF_TRANSFER_ROUTINES_TABLE[0].EXT_IF_TRANSFER_ROUTINES[i]});
+                }
+            }
+
+            for (let i = 0; i < jsonBase.EXT_IF_ORDERIMPORT_MAPPINGS_TABLE[0].EXT_IF_ORDERIMPORT_MAPPINGS.length; i++) {
+                if (jsonBase.EXT_IF_ORDERIMPORT_MAPPINGS_TABLE[0].EXT_IF_ORDERIMPORT_MAPPINGS[i].ADMINISTRATIVE_SITE_ID[0] == companyId) {
+                    datas.EXT_IF_ORDERIMPORT_MAPPINGS.datas.push({... jsonBase.EXT_IF_ORDERIMPORT_MAPPINGS_TABLE[0].EXT_IF_ORDERIMPORT_MAPPINGS[i]});
+                }
+            }
+
+             for (let i = 0; i < jsonBase.EXT_IF_ORDERIMPORT_ROUTINES_TABLE[0].EXT_IF_ORDERIMPORT_ROUTINES.length; i++) {
+                if (jsonBase.EXT_IF_ORDERIMPORT_ROUTINES_TABLE[0].EXT_IF_ORDERIMPORT_ROUTINES[i].ADMINISTRATIVE_SITE_ID[0] == companyId) {
+                    datas.EXT_IF_ORDERIMPORT_ROUTINES.datas.push({... jsonBase.EXT_IF_ORDERIMPORT_ROUTINES_TABLE[0].EXT_IF_ORDERIMPORT_ROUTINES[i]});
+                }
+            }
+            //TODO: continue 
+            /* System Mapping : END scanning */
+
+            // Faire un mapping des organisations pour ensuite reprendre les configs
+            for (let i = 0; i < jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT.length; i++) {
+                if (jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT[i].Name[0] == companyName) {
+                    datas.ORGANIZATION_ELEMENTS.datas.push({... jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT[i]});
+                    if (jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT[i].PurchaseEntityConfigId !== undefined)
+                        datas.ORGANIZATION_ELEMENTS.temp += `pec*${jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT[i].PurchaseEntityConfigId[0]}`;
+                }
+            }
+
+            /* Entity Mapping : START scanning */
+            
+            for (let i = 0; i < jsonBase.CMN_ENTITY_CONFIG_TABLE[0].CMN_ENTITY_CONFIG.length; i++) {
+                if (datas.ORGANIZATION_ELEMENTS.temp.indexOf(`pec${jsonBase.CMN_ENTITY_CONFIG_TABLE[0].CMN_ENTITY_CONFIG[i].ID[0]}`) != -1) {
+                    datas.CMN_ENTITY_CONFIG.datas.push({... jsonBase.CMN_ENTITY_CONFIG_TABLE[0].CMN_ENTITY_CONFIG[i]});
+                    datas.CMN_ENTITY_CONFIG.temp += `cid*${jsonBase.CMN_ENTITY_CONFIG_TABLE[0].CMN_ENTITY_CONFIG[i].ID[0]}`;
+                }
+            }
+            /* Entity Mapping : END scanning */
+
+            return datas;
+        }
+
+        function getJSONItems(datas, key) {
+            const items = [];
+
+            for (const data of datas) {
+                items.push({[key] : {... data}});
+            }
+
+            return items;
+        }
+
+        function IntegrateSubDatasInXmlSection(finalJson, jsonKey, json) {
+            if (jsonKey !== "ORGANIZATION_ELEMENTS") return {
+                ...finalJson.CT,
+                [json[jsonKey].tagsBefore[0]]: getJSONItems(json[jsonKey].datas, jsonKey)
+            };
+            return {
+                ...finalJson.CT,
+                [json[jsonKey].tagsBefore[0]]: {
+                    [json[jsonKey].tagsBefore[1]] : getJSONItems(json[jsonKey].datas, jsonKey)
+                }
+            }
+        }
+
+        function formatHistoricJSONAfterTreatment(json) {
+            const finalJson = {CT: {
+                Tenant_Name: document.getElementById("newTenantName").value || "vosylegXXX",
+                Database_Type: "Oracle",
+                Product_Version: "26.6.0.4",
+                Deployment_Type: "hot",
+                attr: {IsOrganizationIncluded: "true"}
+            }};
+
+            for (const jsonKey of Object.keys(json)) {
+                finalJson.CT = IntegrateSubDatasInXmlSection(finalJson, jsonKey, json);
+            }
+
+            return finalJson;
+        }
+
+        function preFormatageHistoric(json) {
+            const datas = generateFinalJsonBasicStructure();
+
+            for (const jsonPart of json) {
+                for (const key of Object.keys(jsonPart)) {
+                    datas[key].datas = [... datas[key].datas, ...jsonPart[key].datas];
+                }
+            }
+
+            return datas;
+        }
+
+        function generateNewXmlFileForEachCompany(json) {
+            const chosedOrganizations = document.querySelectorAll(".organizationSelected[data-chosed='1']");
+            const finalResult = [];
+
+            for (const chosedOrganizationsHTML of chosedOrganizations) {
+                finalResult.push(inspectFile(json, chosedOrganizationsHTML.getAttribute("data-id"), chosedOrganizationsHTML.getAttribute("data-name")));
+            }
+
+            return formatHistoricJSONAfterTreatment(preFormatageHistoric(finalResult));
+        }
+    </script>
+    <script id="domEvents">
+        const anyErpLine = document.getElementById("anyErpLine");
+        const resultField = document.getElementById("result");
+        const pasteField = document.getElementById("paste");
+        const resultContainer = document.getElementById("resultContainer");
+        const formCsvBaswareFormatter = document.getElementById("formCsvBaswareFormatter");
+        const csvFile = document.getElementById("csvFile");
+        const csvStrings = document.getElementById("csvStrings");
+        const tableName = document.getElementById("tableName");
+        const headerDataAlreadyExist = document.getElementById("headerDataAlreadyExist");
+        const eraseIdColumn = document.getElementById("eraseIdColumn");
+        const generateSupportFile = document.getElementById("generateSupportFile");
+        const headerLines = document.getElementById("headerLines");
+        const methodName = document.getElementById("methodName");
+        const toolTooChoose = document.getElementsByClassName("toolTooChoose");
+        const output = document.getElementById("XmlDuplicateOutput");
+        const historicFileOrganizations = document.getElementById("historicFileOrganizations");
+        const historicFileAllDatas = document.getElementById("historicFileAllDatas")
+        const CallHistoricFileAllDatas = document.getElementById("CallHistoricFileAllDatas");
+        const selectAll = document.getElementById("selectAll");
+
+        // SCOPE : Outil formatteur de ligne
+
+        anyErpLine.addEventListener("keyup", (evt) => {
+            if (evt.target.value.length > 0) {
+                const res = formatBaseware(evt.target.value);
+
+                if (res != "<pre></pre>") {
+                    resultField.innerHTML = res;
+                    pasteField.style.display = "block";
+                } else {
+                    resultField.innerHTML = "<p id='formatError'>Format de la chaine incorrecte</p>";
+                    pasteField.style.display = "none";
+                }
+
+                resultContainer.style.display = "block";
+            } else resultContainer.style.display = "none";
+        }, false);
+
+        pasteField.addEventListener("click", () => {
+            const res = resultField.innerText.
+                replace(/\s+/g, "").
+                replace(/[&]/, "&amp;").
+                replace(/[<]/g, "&lt;").
+                replace(/[>]/g, "&gt;");
+
+            navigator.clipboard.writeText(res).then(() => {
+                toastr.info("Copie réalisée avec succès");
+            }).catch(() => {
+                toastr.error("Copie impossible");
+            });
+
+            anyErpLine.value = res;
+        }, false);
+
+        document.getElementById("anyErpCodeFormatterForm").addEventListener("submit", (evt) => {
+            evt.preventDefault();
+        }, false);
+
+        // SCOPE : outil générateur de SQL
+
+        for (const htmlEl of toolTooChoose) {
+            htmlEl.addEventListener("click", (e) => {
+                for (subHtmlEl of toolTooChoose) {
+                    document.getElementById(subHtmlEl.getAttribute("data-panel")).classList.add("d-none");
+                }
+
+                document.getElementById(e.currentTarget.getAttribute("data-panel")).classList.remove("d-none");
+            }, false);
+        }
+
+        document.getElementById("importCsvFile").addEventListener("click", () => csvFile.click(), false);
+
+        csvFile.addEventListener("change", () => {
+            readCsvFile(generateColumns);
+        });
+
+        csvStrings.addEventListener("keyup", () => {
+            if (csvStrings.value.length > 0) generateColumns(csvStrings.value)
+        });
+
+        formCsvBaswareFormatter.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            if (csvFile.files.length > 0) readCsvFile(formatInputCsv);
+            else if (csvStrings.value.length > 0) formatInputCsv(csvStrings.value);
+            else toastr.error("Veuillez choisir un fichier CSV ou insérer son contenu dans l'emplacement approprié");
+        }, false);
+
+        for (const extractOption of document.getElementsByClassName("extractOption")) {
+            extractOption.addEventListener("click", () => {
+                if (csvFile.files.length > 0) readCsvFile(generateColumns);
+                else if (csvStrings.value.length > 0) generateColumns(csvStrings.value);
+            }, false);
+        }
+
+        document.getElementById("applyOnCopy").addEventListener("click", () => {
+            navigator.clipboard.writeText(document.getElementById("codeGenerated").innerText);
+            toastr.info("Le code à été copié dans le presse papier");
+        });
+
+        document.getElementById("XmlFile").addEventListener("change", (evt) => {
+            processDuplicatesObjectsFile(evt.currentTarget, document.getElementById("duplicateXMLTargetFields"));
+        }, false);
+
+        selectAll.addEventListener("click", (e) => {
+            const allInputs = document.querySelectorAll(".organizationSelected input[type='checkbox']");
+
+            for (const input of allInputs) {
+                input.checked = true;
+                input.parentNode.setAttribute("data-chosed", "1");
+            }
+        }, false);
+
+        document.getElementById("CallHistoricFileOrganizations").addEventListener("click", (e) => {
+            historicFileOrganizations.click();
+        }, false);
+
+        historicFileOrganizations.addEventListener("change", (e) => {
+            if (!window.electronAPIXMLHistoricImportExport) {
+                toastr.error("Cette option n'est disponible que si l'application est reliée à une API electron");
+                return;
+            }
+
+            try {
+                const fileReader = new FileReader();
+                fileReader.readAsText(e.currentTarget.files[0]);
+                fileReader.onload = async (fr) => {
+                    const result = await window.electronAPIXMLHistoricImportExport.transformHistoric(fr.target.result, true);
+                    console.log(result);
+
+                    if (result.isOk) displayAllOrganizations(result.json);
+                    else toastr.error("Impossible de parser correctement le fichier XML");
+
+                    document.getElementById("historicInput1").reset();
+                };
+            } catch(err) {
+                toastr.error(err.message);
+            }
+        }, false);
+
+        CallHistoricFileAllDatas.addEventListener("click", (e) => {
+            historicFileAllDatas.click();
+        }, false);
+
+        historicFileAllDatas.addEventListener("change", (e) => {
+            if (!window.electronAPIXMLHistoricImportExport) {
+                toastr.error("Cette option n'est disponible que si l'application est reliée à une API electron");
+                return;
+            }
+
+            try {
+                const fileReader = new FileReader();
+                fileReader.readAsText(e.currentTarget.files[0]);
+                fileReader.onload = async (fr) => {
+                    const result = await window.electronAPIXMLHistoricImportExport.transformHistoric(fr.target.result, true);
+
+                    if (result.isOk) {
+                        const finalResult = generateNewXmlFileForEachCompany(result.json);
+                        const xmlFinalResult =
+                            await window.electronAPIXMLHistoricImportExport.transformHistoric(finalResult, false);
+
+                        window.electronAPISaveHistoricalFile.saveHistoricFile(xmlFinalResult);
+                    } else toastr.error("Impossible de parser correctement le fichier XML");
+
+                    document.getElementById("historicInput2").reset();
+                };
+            } catch(err) {
+                toastr.error(err.message);
+            }
+        }, false);
+    </script>
+</html>

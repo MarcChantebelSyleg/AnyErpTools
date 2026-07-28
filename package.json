@@ -1,0 +1,42 @@
+{
+  "name": "anyerp-tools",
+  "version": "1.0.0",
+  "description": "Boite d'outils AnyERP - Application Electron",
+  "main": "main.js",
+  "author": "Syleg",
+  "license": "ISC",
+  "scripts": {
+    "start": "electron .",
+    "startTest": "electron ./test",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.anyerp.tools",
+    "productName": "AnyERP Tools",
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "dependencies": {
+    "json2xml": "^0.1.3",
+    "xml2js": "^0.6.2"
+  }
+}
