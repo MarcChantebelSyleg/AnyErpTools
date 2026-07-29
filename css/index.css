@@ -1,0 +1,271 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #0000002e;
+}
+
+#toolsTooChoose {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    margin-bottom: 30px;
+    padding-top: 20px;
+    border-bottom: 2.5px solid black;
+    width: 90%;
+    margin-left: 5%;
+    border-radius: 10px;
+    box-shadow: 0px 1px 0px;
+}
+
+.toolTooChoose {
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.toolTooChoose span {
+    width: 60%;
+    display: block;
+    margin-left: 20%;
+    padding: 5px 10px;
+    background-color: #14144c;
+    border-radius: 6px;
+    color: white;
+}
+
+form {
+    width: 100%;
+}
+
+#resultContainer {
+    width: 70%;
+    margin-left: 15%;
+}
+
+#textualRead {
+    margin-top: -20px;
+    display: inline-block;
+}
+
+#importCsvFile {
+    cursor: pointer;
+}
+
+#formCsvBaswareFormatter > div:first-child, #processSqlRequestCreationPanel {
+    display: grid;
+    grid-template-columns: 20% 78%;
+    align-items: center;
+    margin-top: 90px;
+}
+
+#sqlRequestCreationOptionsHeader {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    align-items: center;
+}
+
+#sqlRequestCreationOptionsHeader input[type="text"] {
+    margin: 0;
+    height: 45px;
+    width: 97%;
+}
+
+#formCsvBaswareFormatter textarea {
+    margin-top: -20px;
+    display: inline-block;
+    width: 62%;
+    margin-bottom: -21px;
+    margin-left: 32px;
+    border: none;
+}
+
+.headerData {
+    background-color: #00000003;
+}
+
+h6 {
+    color: white;
+    text-shadow: 2px 1px 6px black;
+}
+
+#launchSqlRequestCreation {
+    width: 60%;
+    margin-left: 20%;
+    background-color: #14144c9e;
+    color: white;
+    font-style: italic;
+}
+
+#sqlRequestCreationOptions h6 {
+    color: #14144c;
+    text-shadow: none;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 14px;
+}
+
+#headerLines {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    padding-top: 5px;
+}
+
+#headerLines input {
+    padding-left: 10px;
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: hidden; /* Hide elements that may overflow */
+    text-overflow: ellipsis; /* Request an ellipsis */
+    font-size: 13.3px;
+    border: none;
+    padding-bottom: 7px;
+}
+
+#headerLines input.headerDataDefaultValue, #headerLines .buttonReplaceValues {
+    width: 95%;
+}
+
+#headerLines .buttonReplaceValues {
+    background-color: #14144c;
+    border-color: #14144c
+}
+
+#headerLines .deleteHeader, #headerLines .leaveBlankHeader {
+    position: absolute;
+    margin-left: -270px;
+    margin-top: -33px;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 360px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    text-align: -webkit-center;
+    font-size: 13px;
+}
+
+#headerLines .leaveBlankHeader {
+    margin-top: -15px
+}
+
+#headerLines input:focus {
+    border: none !important;
+}
+
+#methodName {
+    margin: 10px 0 0 0;
+    width: 100%;
+}
+
+input[type="text"] {
+    width: 60%;
+    margin: 40px 20%;
+    padding: 10px;
+    border-radius: 6px;
+    display: block;
+    color: #14144c;
+    font-style: italic;
+    font-size: 13px;
+    border-color: #14144c;
+}
+
+.replaceSpecificValues {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.replaceSpecificValues input[type="text"] {
+    width: 100%;
+    margin: 3px 0;
+}
+
+.replaceSpecificValues .deleteValuesReplace {
+    position: absolute;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 20px;
+    border: 8px solid black;
+    margin-top: -8px;
+    margin-left: -5px;
+}
+
+#result {
+    padding: 10px;
+    border: 2px solid #14144c;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px 1px #14144c inset;
+    color: #14144c;
+    font-weight: 600;
+}
+
+#paste {
+    transition-property: background-color, color;
+    transition-timing-function: linear;
+    transition-duration: 0.2s;
+    right: 15%;
+    position: absolute;
+    margin-top: -16px;
+    padding: 10px 8px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    box-shadow: 1px 1px 4px #14144c;
+}
+
+#paste:hover {
+    transition-property: background-color, color;
+    transition-timing-function: linear;
+    transition-duration: 0.2s;
+    background-color: #14144c;
+    color: white;
+}
+
+#formatError {
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+blockquote#result pre:nth-child(1n+1) {
+    margin: 0;
+}
+
+#CallHistoricFileOrganizations, #CallHistoricFileAllDatas {
+    margin-left: 28%;
+    background-color: #0d0d12;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#CallHistoricFileAllDatas {
+    display: block;
+    margin-top: 10px;
+    margin-left: 36%;
+}
+
+#selectAll {
+    margin: 0 5px;
+}
+
+#newTenantName {
+    display: block;
+    width: 90%;
+    margin: 35px 0 15px 5%;
+    border-radius: 8px;
+    border: 2px solid #0d0d12;
+    box-shadow: 1px 1px 4px #0d0d12;
+}
+
+#organizationsSelection {
+    display: grid;
+    grid-template-columns: repeat(5, 20%);
+    padding: 30px;
+}
+
+#organizationsSelection input[type="checkbox"] {
+    cursor: pointer;
+}
+
+#organizationsSelection .historicOrganizationName {
+    font-weight: bold;
+    font-size: 13px;
+    font-style: italic;
+    margin-left: 6px;
+}
