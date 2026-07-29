@@ -253,10 +253,19 @@ blockquote#result pre:nth-child(1n+1) {
     box-shadow: 1px 1px 4px #0d0d12;
 }
 
+#historicExtractParameters {
+    display: grid;
+    grid-template-columns: 75% 25%;
+}
+
 #organizationsSelection {
     display: grid;
-    grid-template-columns: repeat(5, 20%);
+    grid-template-columns: repeat(3, 33.33%);
     padding: 30px;
+}
+
+#organizationsSelection .organizationSelected {
+    padding: 0 8px;
 }
 
 #organizationsSelection input[type="checkbox"] {
@@ -265,7 +274,53 @@ blockquote#result pre:nth-child(1n+1) {
 
 #organizationsSelection .historicOrganizationName {
     font-weight: bold;
-    font-size: 13px;
+    font-size: 12px;
     font-style: italic;
     margin-left: 6px;
+}
+
+#extractOption .extractOption {
+    width: 100%;
+}
+
+#extractOptions .extractOption span {
+    width: 85%;
+    display: inline-block;
+}
+
+#extractOptions .writeOption {
+    width: 25px;
+    cursor: pointer;
+}
+
+#extractOptions #extractOptionSearch {
+    display: block;
+    width: 92%;
+    margin-bottom: 5px;
+    margin-left: 0;
+}
+
+#extractOptions .extractOptions {
+    display: grid;
+    grid-template-columns: 25% 21% 54%;
+    margin: 5px 3%;
+    width: 80%;
+    font-size: 13px;
+}
+
+#extractOptions .extractOptions * {
+    border: none;
+}
+
+#extractOptions .extractOptions span {
+    cursor: pointer;
+    background-color: rgb(53, 8, 8);
+    color: white;
+    border-radius: 20px;
+    width: 24px;
+    height: 23px;
+    padding-left: 8.5px;
+    position: absolute;
+    margin-left: 19%;
+    margin-top: -2px;
 }
