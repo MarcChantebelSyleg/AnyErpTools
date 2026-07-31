@@ -232,7 +232,7 @@ function processHistoricDataFile(json, companyId, companyName) {
     const jsonBase = json[firstTag];
     const filteredDatas = generateFileInspectionBasicStructures();
 
-    for (const tag of getTagsToProcess()) {
+    for (const tag of getFileTagsList()) {
         filteredDatas[tag] = {...
             processHistoricDataFileForSpecificTag(
                 {... filteredDatas},
@@ -250,23 +250,7 @@ function processHistoricDataFile(json, companyId, companyName) {
     return filteredDatas;
 }
 
-function generateFileInspectionBasicStructures() {
-    let jsonArray = {};
-    
-    for (const key of [
-        "INVOICE_PROCESS", "INVOICE_ACTIVITY", "INVOICE_RECIPIENTRESOLVER",
-        "INVOICE_ACTIVITYPARAMETER", "INVOICE_TRANSITION", "EXT_IF_BASICDATA", "EXT_IF_BASICDATA_MAPPINGS",
-        "EXT_IF_BASICDATA_CHILDNODES", "EXT_IF_TRANSFER_RESP_ROUTINES", "EXT_IF_TRANSFER_MAPPINGS",
-        "EXT_IF_TRANSFER_RESP_MAPPINGS", "EXT_IF_TRANSFER_ROUTINES", "EXT_IF_ORDERIMPORT_MAPPINGS",
-        "EXT_IF_ORDERIMPORT_ROUTINES", "ORGANIZATION_ELEMENT", "CMN_ENTITY_CONFIG"
-    ]) {
-        jsonArray[key] = generateFileInspectionBasicStructure(key);
-    }
-    
-    return jsonArray;
-}
-
-function getTagsToProcess() {
+function getFileTagsList() {
     return [
         "INVOICE_PROCESS", "INVOICE_ACTIVITY", "INVOICE_RECIPIENTRESOLVER",
         "INVOICE_ACTIVITYPARAMETER", "INVOICE_TRANSITION", "EXT_IF_BASICDATA", "EXT_IF_BASICDATA_MAPPINGS",
@@ -274,6 +258,16 @@ function getTagsToProcess() {
         "EXT_IF_TRANSFER_RESP_MAPPINGS", "EXT_IF_TRANSFER_ROUTINES", "EXT_IF_ORDERIMPORT_MAPPINGS",
         "EXT_IF_ORDERIMPORT_ROUTINES", "ORGANIZATION_ELEMENT", "CMN_ENTITY_CONFIG"
     ];
+}
+
+function generateFileInspectionBasicStructures() {
+    let jsonArray = {};
+    
+    for (const key of getFileTagsList()) {
+        jsonArray[key] = generateFileInspectionBasicStructure(key);
+    }
+    
+    return jsonArray;
 }
 
 function getTagsFromAncestorsOnes(json, key) {
