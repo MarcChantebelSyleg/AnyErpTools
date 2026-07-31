@@ -110,7 +110,8 @@
                 <button id="CallHistoricFileOrganizations" type="button">Choisir les organisations sur lesquelles s'effectuera la copie</button>
                 <button id="CallHistoricFileAllDatas" class="d-none" type="button">Lancer la copie pour chacune des organisation</button>
             </div>
-            <input id="newTenantName" type="text" placeholder="Entrez le nom du tenant ici ..." /> 
+            <input id="newTenantName" type="text" placeholder="Entrez le nom du tenant ici ..." />
+            <progress id="progress" value="0" min="0" max="0" class="d-none"></progress>
             <div id="historicExtractParameters">
                 <div id="organizationsSelectionBox">
                     <input id="searchOrganizations" type="text" placeholder="Rechercher une organisation ..." />

@@ -243,6 +243,8 @@ function processHistoricDataFile(json, companyId, companyName) {
                 getTagSearchOptions(tag)
             )
         };
+
+        progress.value = parseInt(progress.value) + 1;
     }
 
     return filteredDatas;
@@ -341,7 +343,7 @@ function getTagSearchOptions(key) {
                 prefix: "pid", entity: "INVOICE_PROCESS", key: "ProcessId"
             }};
         case "EXT_IF_BASICDATA":
-            return {prefix: "extba", tag: "Id", optionnal: false};
+            return {prefix: "extba", tag: "ID", optionnal: false};
         case "EXT_IF_BASICDATA_MAPPINGS":
             return {optionnal: true};
         case "EXT_IF_BASICDATA_CHILDNODES":
@@ -421,29 +423,43 @@ function canProceedTag(key) {
 }
 
 function canProcessDatas(key, datas) {
-    const specificValues = mapExtractOptions(document.querySelectorAll(`div.extractOption[data-xml-name="${key}"] .extractOptions`));
-    if (Object.keys(specificValues).length == 0) return true;
+    const extractOptions = mapExtractOptions(document.querySelectorAll(`div.extractOption[data-xml-name="${key}"] .extractOptions`));
+    if (Object.keys(extractOptions).length == 0) return true;
 
-    for (const subKey of Object.keys(datas)) {
-        if (Object.hasOwn(specificValues, subKey) && specificValues[subKey].operator == "=" && specificValues[subKey].value !== datas[subKey][0]) return false;
-        if (Object.hasOwn(specificValues, subKey) && specificValues[subKey].operator == "comme" && datas[subKey][0].toLowerCase().indexOf(specificValues[subKey].value.toLowerCase()) == -1) return false;
+    for (const childTag of Object.keys(datas)) {
+        if (Object.hasOwn(extractOptions, childTag)) {
+            let found = false;
+
+            for (const filter of extractOptions[childTag]) {
+                if (filter.operator == "=" && filter.value == datas[childTag][0])
+                    found = true;
+                if (filter.operator == "comme" && datas[childTag][0].toLowerCase().indexOf(filter.value.toLowerCase()) != -1)
+                    found = true;
+            }
+
+            if (!found) return false;
+        }
     }
 
     return true;
 }
 
-function mapExtractOptions(HTMLSpecificValues) {
-    let specificValues = {};
+function mapExtractOptions(HTMLExtractOptions) {
+    let extractOptions = {};
 
-    for (const HTMLSpecificValue of HTMLSpecificValues) {
-        const select = HTMLSpecificValue.getElementsByTagName("select");
-        specificValues[select[0].options[select[0].selectedIndex].label] = {
+    for (const HTMLExtractOption of HTMLExtractOptions) {
+        const select = HTMLExtractOption.getElementsByTagName("select");
+        const label = select[0].options[select[0].selectedIndex].label;
+
+        if (!extractOptions[label]) extractOptions[label] = [];
+            
+        extractOptions[label].push({
             operator: select[1].options[select[1].selectedIndex].label,
-            value: HTMLSpecificValue.getElementsByTagName("input")[0].value
-        };
+            value: HTMLExtractOption.getElementsByTagName("input")[0].value
+        });
     }
 
-    return specificValues;
+    return extractOptions;
 }
 
 function getJSONItems(datas, key) {
@@ -500,6 +516,7 @@ function preFormatageHistoric(json) {
 function generateFilteredHistoricFile(json) {
     const chosedOrganizations = document.querySelectorAll(".organizationSelected[data-chosed='1']");
     const finalResult = [];
+    progress.max = chosedOrganizations.length * Object.keys(generateFileInspectionBasicStructures()).length;
 
     for (const chosedOrganizationsHTML of chosedOrganizations) {
         finalResult.push(processHistoricDataFile(json, chosedOrganizationsHTML.getAttribute("data-id"), chosedOrganizationsHTML.getAttribute("data-name")));

@@ -4,6 +4,7 @@ const CallHistoricFileAllDatas = document.getElementById("CallHistoricFileAllDat
 const selectAll = document.getElementById("selectAll");
 const writeOptions = document.getElementsByClassName("writeOption");
 const takesTagOrNot = document.getElementsByClassName("takeTagOrNot");
+const progress = document.getElementById("progress");
 
 selectAll.addEventListener("click", (e) => {
     const allInputs = document.querySelectorAll(".organizationSelected input[type='checkbox']");
@@ -119,6 +120,7 @@ historicFileAllDatas.addEventListener("change", (e) => {
         const fileReader = new FileReader();
         fileReader.readAsText(e.currentTarget.files[0]);
         fileReader.onload = async (fr) => {
+            progress.classList.remove("d-none");
             const result = await window.electronAPIXMLHistoricImportExport.transformHistoric(fr.target.result, true);
 
             if (result.isOk) {
