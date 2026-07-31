@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, shell, dialog, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
+const { spawn } = require('child_process')
 const json2xml = require('json2xml');
 const parseString = require('xml2js').parseString;
 
@@ -148,6 +149,33 @@ ipcMain.handle('save-historic-file', async (event, datas) => {
   } catch (err) {
     return { success: false, error: err.message }
   }
+});
+
+ipcMain.handle('launch-ubl-inspector', async (event, filePath) => {
+  const child = spawn("../python/App/Python/python.exe", ["../python/syleg_scripts/valider_ubl_1.1.py", filePath]);
+  let stderr = "";
+  let stdout = "";
+
+  child.stderr.on("data", (data) => {
+    stderr += data.toString();
+    console.error(`Python stderr:\n${data.toString()}`);
+  });
+
+  child.stdout.on("data", (data) => {
+    stdout += data.toString();
+    console.log(`Python stdout:\n${data.toString()}`);
+  });
+
+  child.on("error", (err) => {
+    console.error(`Erreur de lancement: ${err.message}`);
+  });
+
+  child.on("close", (code) => {
+    if (code !== 0) {
+      console.error(`Python a échoué avec le code ${code}`);
+      console.error("Stacktrace Python :\n" + stderr);
+    }
+  });
 });
 
 app.whenReady().then(() => {
