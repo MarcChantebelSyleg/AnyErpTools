@@ -106,367 +106,435 @@
             <form id="historicInput2"></form>
                 <input id="historicFileAllDatas" type="file" type="text/xml" class="d-none" />
             </form>
-
             <div>
                 <button id="CallHistoricFileOrganizations" type="button">Choisir les organisations sur lesquelles s'effectuera la copie</button>
-                <input id="selectAll" type="checkbox" />
-                <label>Tout sélectionner</label>
+                <button id="CallHistoricFileAllDatas" class="d-none" type="button">Lancer la copie pour chacune des organisation</button>
             </div>
-
-            <button id="CallHistoricFileAllDatas" class="d-none" type="button">Lancer la copie pour chacune des organisation</button>
-
             <input id="newTenantName" type="text" placeholder="Entrez le nom du tenant ici ..." /> 
             <div id="historicExtractParameters">
                 <div id="organizationsSelectionBox">
                     <input id="searchOrganizations" type="text" placeholder="Rechercher une organisation ..." />
+                    <button id="selectAll" type="button">Tout selectionner</button>
+                    <button id="unSelectAll" type="button">Tout deselectionner</button>
                     <div id="organizationsSelection"></div>
                 </div>
                 <div id="extractOptions">
                     <input id="extractOptionSearch" type="text" placeholder="Rechercher un ou des tags" />
-                    <div class="extractOption" data-xml-name="CMN_SCREEN">
-                        <span>CMN_SCREEN</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_SCHEMA">
-                        <span>CMN_SCHEMA</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_SCHEMA_ITEM">
-                        <span>CMN_SCHEMA_ITEM</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_SCREEN_SCHEMA">
-                        <span>CMN_SCREEN_SCHEMA</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_LIST_VIEW">
-                        <span>CMN_LIST_VIEW</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_LIST_VIEW_ITEM">
-                        <span>CMN_LIST_VIEW_ITEM</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_ENTITY_CONFIG">
-                        <span>CMN_ENTITY_CONFIG</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_ENTITY_TYPE_CONFIG">
-                        <span>CMN_ENTITY_TYPE_CONFIG</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_ENTITY_CONFIG_ITEM">
-                        <span>CMN_ENTITY_CONFIG_ITEM</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_ENTITY_DIFFERENCE_CALC">
-                        <span>CMN_ENTITY_DIFFERENCE_CALC</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_EDIT_VIEW">
-                        <span>CMN_EDIT_VIEW</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_EDIT_TYPE_VIEW">
-                        <span>CMN_EDIT_TYPE_VIEW</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_EDIT_VIEW_ITEM">
-                        <span>CMN_EDIT_VIEW_ITEM</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_EDIT_VIEW_SUMMARY_ITEM">
-                        <span>CMN_EDIT_VIEW_SUMMARY_ITEM</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_ENTITY_ACTION_RULE">
-                        <span>CMN_ENTITY_ACTION_RULE</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_ENTITY_ITEM_RULE">
-                        <span>CMN_ENTITY_ITEM_RULE</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_ENTITY_RULE_PARAMETER">
-                        <span>CMN_ENTITY_RULE_PARAMETER</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_ENTITY_TYPE_RULE">
-                        <span>CMN_ENTITY_TYPE_RULE</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_LIST_SOURCE">
-                        <span>CMN_LIST_SOURCE</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_LIST_SOURCE_COLUMN">
-                        <span>CMN_LIST_SOURCE_COLUMN</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_LOOKUP_LIST">
-                        <span>CMN_LOOKUP_LIST</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CMN_LOOKUP_LIST_COLUMN">
-                        <span>CMN_LOOKUP_LIST_COLUMN</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM_CATEGORY">
-                        <span>OM_CATEGORY</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM_CATEGORY_SELECTION_COMPANY">
-                        <span>OM_CATEGORY_SELECTION_COMPANY</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM_CATEGORY_FILTER">
-                        <span>OM_CATEGORY_FILTER</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM2_CODING_MAPPING">
-                        <span>OM2_CODING_MAPPING</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM2_VALIDATION_RULES_ALL">
-                        <span>OM2_VALIDATION_RULES_ALL</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM_CATEGORY_SELECTION_COMPANY">
-                        <span>OM2_BESTFIT_FUNCTIONS_ALL</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM2_BESTFIT_FUNCTIONS">
-                        <span>OM2_BESTFIT_FUNCTIONS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM2_CATEGORY_VALIDATION_RULES">
-                        <span>OM2_CATEGORY_VALIDATION_RULES</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM_CONFIGURATION">
-                        <span>OM_CONFIGURATION</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OM_ASSOCIATION_MAPPING_RULE">
-                        <span>OM_ASSOCIATION_MAPPING_RULE</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CT_GDM_LIST">
-                        <span>CT_GDM_LIST</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="INVOICE_PROCESS">
-                        <span>INVOICE_PROCESS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="INVOICE_ACTIVITY">
-                        <span>INVOICE_ACTIVITY</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="INVOICE_RECIPIENTRESOLVER">
-                        <span>INVOICE_RECIPIENTRESOLVER</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="INVOICE_ACTIVITYPARAMETER">
-                        <span>INVOICE_ACTIVITYPARAMETER</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="INVOICE_TRANSITION">
-                        <span>INVOICE_TRANSITION</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="PURCHASE_PROCESS">
-                        <span>PURCHASE_PROCESS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="PURCHASE_ACTIVITY">
-                        <span>PURCHASE_ACTIVITY</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="PURCHASE_RECIPIENTRESOLVER">
-                        <span>PURCHASE_RECIPIENTRESOLVER</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="PURCHASE_ACTIVITYPARAMETER">
-                        <span>PURCHASE_ACTIVITYPARAMETER</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="PURCHASE_TRANSITION">
-                        <span>PURCHASE_TRANSITION</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="PP_CONFIGURATION">
-                        <span>PP_CONFIGURATION</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="PP_ASSOCIATION_MAPPING_RULE">
-                        <span>PP_ASSOCIATION_MAPPING_RULE</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="CUSTOMDATACONFIGV1">
-                        <span>CUSTOMDATACONFIGV1</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="ORGADDRPARTKEYV1">
-                        <span>ORGADDRPARTKEYV1</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="IDENTIFIERKEYV1">
-                        <span>IDENTIFIERKEYV1</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="SUPPADDRPARTKEYV1">
-                        <span>SUPPADDRPARTKEYV1</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="LOCALIZATIONRESOURCE">
-                        <span>LOCALIZATIONRESOURCE</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="OVERRIDELOCALIZATIONRESOURCE">
-                        <span>OVERRIDELOCALIZATIONRESOURCE</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="EXT_IF_BASICDATA">
-                        <span>EXT_IF_BASICDATA</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="EXT_IF_BASICDATA_MAPPINGS">
-                        <span>EXT_IF_BASICDATA_MAPPINGS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="EXT_IF_BASICDATA_CHILDNODES">
-                        <span>EXT_IF_BASICDATA_CHILDNODES</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="EXT_IF_TRANSFER_RESP_ROUTINES">
-                        <span>EXT_IF_TRANSFER_RESP_ROUTINES</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="EXT_IF_TRANSFER_MAPPINGS">
-                        <span>EXT_IF_TRANSFER_MAPPINGS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="EXT_IF_TRANSFER_RESP_MAPPINGS">
-                        <span>EXT_IF_TRANSFER_RESP_MAPPINGS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="EXT_IF_TRANSFER_ROUTINES">
-                        <span>EXT_IF_TRANSFER_ROUTINES</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="EXT_IF_ORDERIMPORT_MAPPINGS">
-                        <span>EXT_IF_ORDERIMPORT_MAPPINGS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="EXT_IF_ORDERIMPORT_ROUTINES">
-                        <span>EXT_IF_ORDERIMPORT_ROUTINES</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="IA_CONFIG">
-                        <span>IA_CONFIG</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="IA_ACTION_SETTINGS">
-                        <span>IA_ACTION_SETTINGS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="ADM_EMAIL_TYPE">
-                        <span>ADM_EMAIL_TYPE</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="PURCHASE_CONFIG">
-                        <span>PURCHASE_CONFIG</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="SCHEDULER_TASKS">
-                        <span>SCHEDULER_TASKS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="ORGANIZATION_ELEMENT">
-                        <span>ORGANIZATION_ELEMENT</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="ORGANIZATION_IDENTIFIER">
-                        <span>ORGANIZATION_IDENTIFIER</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="ORGANIZATION_ADDRESS">
-                        <span>ORGANIZATION_ADDRESS</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
-                    </div>
-                    <div class="extractOption" data-xml-name="ORGANIZATION_ADDRESS_PART">
-                        <span>ORGANIZATION_ADDRESS_PART</span>
-                        <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
-                        <div></div>
+                    <div id="extractOptionsContainer">
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_SCREEN">
+                            <span>CMN_SCREEN</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_SCHEMA">
+                            <span>CMN_SCHEMA</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_SCHEMA_ITEM">
+                            <span>CMN_SCHEMA_ITEM</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_SCREEN_SCHEMA">
+                            <span>CMN_SCREEN_SCHEMA</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_LIST_VIEW">
+                            <span>CMN_LIST_VIEW</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_LIST_VIEW_ITEM">
+                            <span>CMN_LIST_VIEW_ITEM</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_ENTITY_CONFIG">
+                            <span>CMN_ENTITY_CONFIG</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_ENTITY_TYPE_CONFIG">
+                            <span>CMN_ENTITY_TYPE_CONFIG</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_ENTITY_CONFIG_ITEM">
+                            <span>CMN_ENTITY_CONFIG_ITEM</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_ENTITY_DIFFERENCE_CALC">
+                            <span>CMN_ENTITY_DIFFERENCE_CALC</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_EDIT_VIEW">
+                            <span>CMN_EDIT_VIEW</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_EDIT_TYPE_VIEW">
+                            <span>CMN_EDIT_TYPE_VIEW</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_EDIT_VIEW_ITEM">
+                            <span>CMN_EDIT_VIEW_ITEM</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_EDIT_VIEW_SUMMARY_ITEM">
+                            <span>CMN_EDIT_VIEW_SUMMARY_ITEM</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_ENTITY_ACTION_RULE">
+                            <span>CMN_ENTITY_ACTION_RULE</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_ENTITY_ITEM_RULE">
+                            <span>CMN_ENTITY_ITEM_RULE</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_ENTITY_RULE_PARAMETER">
+                            <span>CMN_ENTITY_RULE_PARAMETER</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_ENTITY_TYPE_RULE">
+                            <span>CMN_ENTITY_TYPE_RULE</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_LIST_SOURCE">
+                            <span>CMN_LIST_SOURCE</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_LIST_SOURCE_COLUMN">
+                            <span>CMN_LIST_SOURCE_COLUMN</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_LOOKUP_LIST">
+                            <span>CMN_LOOKUP_LIST</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CMN_LOOKUP_LIST_COLUMN">
+                            <span>CMN_LOOKUP_LIST_COLUMN</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM_CATEGORY">
+                            <span>OM_CATEGORY</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM_CATEGORY_SELECTION_COMPANY">
+                            <span>OM_CATEGORY_SELECTION_COMPANY</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM_CATEGORY_FILTER">
+                            <span>OM_CATEGORY_FILTER</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM2_CODING_MAPPING">
+                            <span>OM2_CODING_MAPPING</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM2_VALIDATION_RULES_ALL">
+                            <span>OM2_VALIDATION_RULES_ALL</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM_CATEGORY_SELECTION_COMPANY">
+                            <span>OM2_BESTFIT_FUNCTIONS_ALL</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM2_BESTFIT_FUNCTIONS">
+                            <span>OM2_BESTFIT_FUNCTIONS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM2_CATEGORY_VALIDATION_RULES">
+                            <span>OM2_CATEGORY_VALIDATION_RULES</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM_CONFIGURATION">
+                            <span>OM_CONFIGURATION</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OM_ASSOCIATION_MAPPING_RULE">
+                            <span>OM_ASSOCIATION_MAPPING_RULE</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CT_GDM_LIST">
+                            <span>CT_GDM_LIST</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="INVOICE_PROCESS">
+                            <span>INVOICE_PROCESS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="INVOICE_ACTIVITY">
+                            <span>INVOICE_ACTIVITY</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="INVOICE_RECIPIENTRESOLVER">
+                            <span>INVOICE_RECIPIENTRESOLVER</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="INVOICE_ACTIVITYPARAMETER">
+                            <span>INVOICE_ACTIVITYPARAMETER</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="INVOICE_TRANSITION">
+                            <span>INVOICE_TRANSITION</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="PURCHASE_PROCESS">
+                            <span>PURCHASE_PROCESS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="PURCHASE_ACTIVITY">
+                            <span>PURCHASE_ACTIVITY</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="PURCHASE_RECIPIENTRESOLVER">
+                            <span>PURCHASE_RECIPIENTRESOLVER</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="PURCHASE_ACTIVITYPARAMETER">
+                            <span>PURCHASE_ACTIVITYPARAMETER</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="PURCHASE_TRANSITION">
+                            <span>PURCHASE_TRANSITION</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="PP_CONFIGURATION">
+                            <span>PP_CONFIGURATION</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="PP_ASSOCIATION_MAPPING_RULE">
+                            <span>PP_ASSOCIATION_MAPPING_RULE</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="CUSTOMDATACONFIGV1">
+                            <span>CUSTOMDATACONFIGV1</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="ORGADDRPARTKEYV1">
+                            <span>ORGADDRPARTKEYV1</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="IDENTIFIERKEYV1">
+                            <span>IDENTIFIERKEYV1</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="SUPPADDRPARTKEYV1">
+                            <span>SUPPADDRPARTKEYV1</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="LOCALIZATIONRESOURCE">
+                            <span>LOCALIZATIONRESOURCE</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="OVERRIDELOCALIZATIONRESOURCE">
+                            <span>OVERRIDELOCALIZATIONRESOURCE</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="EXT_IF_BASICDATA">
+                            <span>EXT_IF_BASICDATA</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="EXT_IF_BASICDATA_MAPPINGS">
+                            <span>EXT_IF_BASICDATA_MAPPINGS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="EXT_IF_BASICDATA_CHILDNODES">
+                            <span>EXT_IF_BASICDATA_CHILDNODES</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="EXT_IF_TRANSFER_RESP_ROUTINES">
+                            <span>EXT_IF_TRANSFER_RESP_ROUTINES</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="EXT_IF_TRANSFER_MAPPINGS">
+                            <span>EXT_IF_TRANSFER_MAPPINGS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="EXT_IF_TRANSFER_RESP_MAPPINGS">
+                            <span>EXT_IF_TRANSFER_RESP_MAPPINGS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="EXT_IF_TRANSFER_ROUTINES">
+                            <span>EXT_IF_TRANSFER_ROUTINES</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="EXT_IF_ORDERIMPORT_MAPPINGS">
+                            <span>EXT_IF_ORDERIMPORT_MAPPINGS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="EXT_IF_ORDERIMPORT_ROUTINES">
+                            <span>EXT_IF_ORDERIMPORT_ROUTINES</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="IA_CONFIG">
+                            <span>IA_CONFIG</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="IA_ACTION_SETTINGS">
+                            <span>IA_ACTION_SETTINGS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="ADM_EMAIL_TYPE">
+                            <span>ADM_EMAIL_TYPE</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="PURCHASE_CONFIG">
+                            <span>PURCHASE_CONFIG</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="SCHEDULER_TASKS">
+                            <span>SCHEDULER_TASKS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="ORGANIZATION_ELEMENT">
+                            <span>ORGANIZATION_ELEMENT</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="ORGANIZATION_IDENTIFIER">
+                            <span>ORGANIZATION_IDENTIFIER</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="ORGANIZATION_ADDRESS">
+                            <span>ORGANIZATION_ADDRESS</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
+                        <div class="extractOption" data-take-tag="1" data-xml-name="ORGANIZATION_ADDRESS_PART">
+                            <span>ORGANIZATION_ADDRESS_PART</span>
+                            <img class="writeOption" src="./img/hand.png" title="Cliquez ici pour ajouter un filtre" />
+                            <img class="takeTagOrNot" src="./img/notTakeTag.png" title="Cliquez ici pour ne pas traiter cette balise" data-take-tag="1" />
+                            <div></div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-function getAllPossibleTagsForKey(key) {
+function getAllPossibleTagChilds(key) {
     switch(key) {
         case "CMN_SCREEN":
             return ["ID", "SCREEN_KEY", "PRODUCT_CODE", "NAME", "DESCRIPTION"];
@@ -139,7 +139,7 @@ function getAllPossibleTagsForKey(key) {
         case "ORGANIZATION_ADDRESS_PART":
             return ["Id", "PartKey", "PartValue", "AddressId"];
         default:
-            console.warn("Tag inconnu / non trouve dans le XML : " + tagName);
+            console.warn(`Tag inconnu / non trouve dans le XML : ${tagName}`);
             return [];
     }
 }
@@ -149,7 +149,7 @@ function generateExtractOption(key, panel) {
     firstDiv.classList.add("extractOptions");
 
     const tagSelect = document.createElement("select");
-    for (const tag of getAllPossibleTagsForKey(key)) {
+    for (const tag of getAllPossibleTagChilds(key)) {
         const option = document.createElement("option");
         option.value = option.innerText = tag;
         tagSelect.appendChild(option);
@@ -222,12 +222,66 @@ function displayAllOrganizations(json) {
 }
 
 function takeJsonData(allTags, i, jsonBase, companyName) {
-        const result = {isOk: false, data: null};
+    const result = {isOk: false, data: null};
 
-        return result;
+    return result;
 }
 
-function getTagBefore(key) {
+function processHistoricDataFile(json, companyId, companyName) {
+    const firstTag = Object.keys(json);
+    const jsonBase = json[firstTag];
+    const filteredDatas = generateFileInspectionBasicStructures();
+
+    for (const tag of getTagsToProcess()) {
+        filteredDatas[tag] = {...
+            processHistoricDataFileForSpecificTag(
+                {... filteredDatas},
+                getTagsFromAncestorsOnes(jsonBase, tag),
+                tag,
+                tag != "ORGANIZATION_ELEMENT" ? companyId : null,
+                tag == "ORGANIZATION_ELEMENT" ? companyName : null,
+                getTagSearchOptions(tag)
+            )
+        };
+    }
+
+    return filteredDatas;
+}
+
+function generateFileInspectionBasicStructures() {
+    let jsonArray = {};
+    
+    for (const key of [
+        "INVOICE_PROCESS", "INVOICE_ACTIVITY", "INVOICE_RECIPIENTRESOLVER",
+        "INVOICE_ACTIVITYPARAMETER", "INVOICE_TRANSITION", "EXT_IF_BASICDATA", "EXT_IF_BASICDATA_MAPPINGS",
+        "EXT_IF_BASICDATA_CHILDNODES", "EXT_IF_TRANSFER_RESP_ROUTINES", "EXT_IF_TRANSFER_MAPPINGS",
+        "EXT_IF_TRANSFER_RESP_MAPPINGS", "EXT_IF_TRANSFER_ROUTINES", "EXT_IF_ORDERIMPORT_MAPPINGS",
+        "EXT_IF_ORDERIMPORT_ROUTINES", "ORGANIZATION_ELEMENT", "CMN_ENTITY_CONFIG"
+    ]) {
+        jsonArray[key] = generateFileInspectionBasicStructure(key);
+    }
+    
+    return jsonArray;
+}
+
+function getTagsToProcess() {
+    return [
+        "INVOICE_PROCESS", "INVOICE_ACTIVITY", "INVOICE_RECIPIENTRESOLVER",
+        "INVOICE_ACTIVITYPARAMETER", "INVOICE_TRANSITION", "EXT_IF_BASICDATA", "EXT_IF_BASICDATA_MAPPINGS",
+        "EXT_IF_BASICDATA_CHILDNODES", "EXT_IF_TRANSFER_RESP_ROUTINES", "EXT_IF_TRANSFER_MAPPINGS",
+        "EXT_IF_TRANSFER_RESP_MAPPINGS", "EXT_IF_TRANSFER_ROUTINES", "EXT_IF_ORDERIMPORT_MAPPINGS",
+        "EXT_IF_ORDERIMPORT_ROUTINES", "ORGANIZATION_ELEMENT", "CMN_ENTITY_CONFIG"
+    ];
+}
+
+function getTagsFromAncestorsOnes(json, key) {
+    const ancestors = getTagAncestors(key);
+
+    if (ancestors.length == 1) return json[ancestors[0]][0][key];
+    return json[ancestors[0]][0][ancestors[1]][0][key];
+}
+
+function getTagAncestors(key) {
     switch (key) {
         case "CMN_ENTITY_CONFIG":
             return ["CMN_ENTITY_CONFIG_TABLE"];
@@ -237,7 +291,7 @@ function getTagBefore(key) {
             return ["INVOICE_ACTIVITY_TABLE"];
         case "INVOICE_RECIPIENTRESOLVER":
             return ["INVOICE_RECIPIENTRESOLVER_TABLE"];
-        case "INVOICE_ACTIVITY_PARAMETER":
+        case "INVOICE_ACTIVITYPARAMETER":
             return ["INVOICE_ACTIVITYPARAMETER_TABLE"];
         case "INVOICE_TRANSITION":
             return ["INVOICE_TRANSITION_TABLE"];
@@ -251,39 +305,131 @@ function getTagBefore(key) {
             return ["EXT_IF_TRANSFER_RESP_ROUTINES_TABLE"];
         case "EXT_IF_TRANSFER_MAPPINGS":
             return ["EXT_IF_TRANSFER_MAPPINGS_TABLE"];
-        case "EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE":
+        case "EXT_IF_TRANSFER_RESP_MAPPINGS":
             return ["EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE"];
-        case "EXT_IF_TRANSFER_ROUTINES_TABLE":
+        case "EXT_IF_TRANSFER_ROUTINES":
             return ["EXT_IF_TRANSFER_ROUTINES_TABLE"];
         case "EXT_IF_ORDERIMPORT_MAPPINGS":
             return ["EXT_IF_ORDERIMPORT_MAPPINGS_TABLE"];
         case "EXT_IF_ORDERIMPORT_ROUTINES":
             return ["EXT_IF_ORDERIMPORT_ROUTINES_TABLE"];
-        case "ORGANIZATION_ELEMENTS":
+        case "ORGANIZATION_ELEMENT":
             return ["ORGANIZATION_TREE_TABLE", "ORGANIZATION_ELEMENTS"];
         default:
-            throw new Exception("Erreur : aucune liste de noeux déclarée");
+            throw new Error(`Erreur : aucune liste de noeux déclarée for the following key : ${key}`);
     }
 }
 
-function generateFileInspectionArray(keys) {
-    let jsonArray = {};
-    
-    for (const key of keys) {
-        jsonArray[key] = {"datas" : [], "temp" : "", "tagsBefore": getTagBefore(key)};
+function getTagSearchOptions(key) {
+    switch(key) {
+        case "INVOICE_PROCESS":
+            return {prefix: "pid", tag: "Id", optionnal: false};
+        case "INVOICE_ACTIVITY":
+            return {prefix: "pac", tag: "Id", optionnal: false, findRelevantDataInOtherTag: {
+                prefix: "pid", entity: "INVOICE_PROCESS", key: "ProcessId"
+            }};
+        case "INVOICE_RECIPIENTRESOLVER":
+            return {optionnal: true, findRelevantDataInOtherTag: {
+                prefix: "pac", entity: "INVOICE_ACTIVITY", key: "ActivityId"
+            }}
+        case "INVOICE_ACTIVITYPARAMETER":
+            return {optionnal: true, findRelevantDataInOtherTag: {
+                prefix: "pac", entity: "INVOICE_ACTIVITY", key: "ActivityId"
+            }}
+        case "INVOICE_TRANSITION":
+            return {optionnal: true, findRelevantDataInOtherTag: {
+                prefix: "pid", entity: "INVOICE_PROCESS", key: "ProcessId"
+            }};
+        case "EXT_IF_BASICDATA":
+            return {prefix: "extba", tag: "Id", optionnal: false};
+        case "EXT_IF_BASICDATA_MAPPINGS":
+            return {optionnal: true};
+        case "EXT_IF_BASICDATA_CHILDNODES":
+            return {optionnal: true};
+        case "EXT_IF_TRANSFER_RESP_ROUTINES":
+            return {optionnal: true};
+        case "EXT_IF_TRANSFER_MAPPINGS":
+            return {optionnal: true};
+        case "EXT_IF_TRANSFER_RESP_MAPPINGS":
+            return {optionnal: true};
+        case "EXT_IF_TRANSFER_ROUTINES":
+            return {optionnal: true};
+        case "EXT_IF_ORDERIMPORT_MAPPINGS":
+            return {optionnal: true};
+        case "EXT_IF_ORDERIMPORT_ROUTINES":
+            return {optionnal: true};
+        case "ORGANIZATION_ELEMENT":
+            return {prefix: "pec", tag: "PurchaseEntityConfigId", optionnal: true};
+        case "CMN_ENTITY_CONFIG":
+            return {prefix: "pac", tag: "ID", optionnal: false, findRelevantDataInOtherTag: {
+                prefix: "pec", entity: "ORGANIZATION_ELEMENT", key: "ID"
+            }};
+        default:
+            console.warn(`Aucune valeur pour la clé : " ${key}`);
+            return {};
     }
-    
-    return jsonArray;
 }
 
-function generateFinalJsonBasicStructure() {
-    return generateFileInspectionArray([
-        "CMN_ENTITY_CONFIG", "INVOICE_PROCESS", "INVOICE_ACTIVITY", "INVOICE_RECIPIENTRESOLVER",
-        "INVOICE_ACTIVITY_PARAMETER", "INVOICE_TRANSITION", "EXT_IF_BASICDATA", "EXT_IF_BASICDATA_MAPPINGS",
-        "EXT_IF_BASICDATA_CHILDNODES", "EXT_IF_TRANSFER_RESP_ROUTINES", "EXT_IF_TRANSFER_MAPPINGS",
-        "EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE", "EXT_IF_TRANSFER_ROUTINES_TABLE", "EXT_IF_ORDERIMPORT_MAPPINGS",
-        "EXT_IF_ORDERIMPORT_ROUTINES", "ORGANIZATION_ELEMENTS"
-    ]);
+function processHistoricDataFileForSpecificTag(
+    runningFilterDatas,
+    tags,
+    tag,
+    companyId,
+    companyName,
+    tagSearchOptions
+) {
+    let treatedJson = generateFileInspectionBasicStructure(tag);
+
+    if (canProceedTag(tag)) {
+        for (let i = 0; i < tags.length; i++) {
+            if (
+                (
+                    (
+                        tagSearchOptions.findRelevantDataInOtherTag &&
+                        runningFilterDatas[tagSearchOptions.findRelevantDataInOtherTag.entity].temp.
+                            indexOf(`${tagSearchOptions.findRelevantDataInOtherTag.prefix}*${tags[i][tagSearchOptions.findRelevantDataInOtherTag.key][0]}`) !== -1
+                    )
+                    || 
+                    (
+                        !tagSearchOptions.findRelevantDataInOtherTag && (
+                            (
+                                companyId && tags[i].AdministrativeSiteId && tags[i].AdministrativeSiteId[0] == companyId ||
+                                companyId && tags[i].ADMINISTRATIVE_SITE_ID && tags[i].ADMINISTRATIVE_SITE_ID[0] == companyId
+                            ) ||
+                            companyName && tags[i].Name[0] == companyName
+                        )
+                    )
+                ) && canProcessDatas(tag, tags[i])
+            ) {
+                treatedJson.datas.push({... tags[i]});
+                if (tagSearchOptions && (!tagSearchOptions.optionnal || tags[i][tagSearchOptions.tag] !== undefined))
+                    treatedJson.temp += `${tagSearchOptions.prefix}*${tags[i][tagSearchOptions.tag][0]}`;
+            }
+        }
+    }
+
+    return treatedJson;
+}
+
+function generateFileInspectionBasicStructure(key) {
+    return {"datas" : [], "temp" : "", "tagsBefore": getTagAncestors(key)};
+}
+
+function canProceedTag(key) {
+    const htmlElement = document.querySelector(`#extractOptionsContainer .extractOption[data-xml-name="${key}"]`);
+    return htmlElement.getAttribute("data-take-tag") == "1";
+}
+
+function canProcessDatas(key, datas) {
+    const specificValues = mapExtractOptions(document.querySelectorAll(`div.extractOption[data-xml-name="${key}"] .extractOptions`));
+    if (Object.keys(specificValues).length == 0) return true;
+
+    for (const subKey of Object.keys(datas)) {
+        if (Object.hasOwn(specificValues, subKey) && specificValues[subKey].operator == "=" && specificValues[subKey].value !== datas[subKey][0]) return false;
+        if (Object.hasOwn(specificValues, subKey) && specificValues[subKey].operator == "comme" && datas[subKey][0].toLowerCase().indexOf(specificValues[subKey].value.toLowerCase()) == -1) return false;
+    }
+
+    return true;
 }
 
 function mapExtractOptions(HTMLSpecificValues) {
@@ -298,186 +444,6 @@ function mapExtractOptions(HTMLSpecificValues) {
     }
 
     return specificValues;
-} 
-
-function canProcessDatas(key, datas) {
-    const specificValues = mapExtractOptions(document.querySelectorAll(`div.extractOption[data-xml-name="${key}"] .extractOptions`));
-    if (Object.keys(specificValues).length == 0) return true;
-
-    for (const subKey of Object.keys(datas)) {
-        if (Object.hasOwn(specificValues, subKey) && specificValues[subKey].operator == "=" && specificValues[subKey].value !== datas[subKey][0]) return false;
-        if (Object.hasOwn(specificValues, subKey) && specificValues[subKey].operator == "comme" && datas[subKey][0].toLowerCase().indexOf(specificValues[subKey].value.toLowerCase()) == -1) return false;
-    }
-
-    return true;
-}
-
-function inspectFile(json, companyId, companyName) {
-    const firstTag = Object.keys(json);
-    const jsonBase = json[firstTag];
-    const datas = generateFinalJsonBasicStructure();
-
-    /* Invoice Process : START scanning */
-    for (let i = 0; i < jsonBase.INVOICE_PROCESS_TABLE[0].INVOICE_PROCESS.length; i++) {
-        if (
-            jsonBase.INVOICE_PROCESS_TABLE[0].INVOICE_PROCESS[i].AdministrativeSiteId[0] == companyId &&
-            canProcessDatas("INVOICE_PROCESS", jsonBase.INVOICE_PROCESS_TABLE[0].INVOICE_PROCESS[i])
-        ) {
-            datas.INVOICE_PROCESS.datas.push({... jsonBase.INVOICE_PROCESS_TABLE[0].INVOICE_PROCESS[i]});
-            datas.INVOICE_PROCESS.temp += `pid*${jsonBase.INVOICE_PROCESS_TABLE[0].INVOICE_PROCESS[i].Id[0]}`;
-        }
-    }
-
-    for (let i = 0; i < jsonBase.INVOICE_ACTIVITY_TABLE[0].INVOICE_ACTIVITY.length; i++) {
-        if (
-            datas.INVOICE_PROCESS.temp.indexOf(`pid*${jsonBase.INVOICE_ACTIVITY_TABLE[0].INVOICE_ACTIVITY[i].ProcessId[0]}`) !== -1 &&
-            canProcessDatas("INVOICE_ACTIVITY", jsonBase.INVOICE_ACTIVITY_TABLE[0].INVOICE_ACTIVITY[i])
-        ) {
-            datas.INVOICE_ACTIVITY.datas.push({... jsonBase.INVOICE_ACTIVITY_TABLE[0].INVOICE_ACTIVITY[i]});
-            datas.INVOICE_ACTIVITY.temp += `pac*${jsonBase.INVOICE_ACTIVITY_TABLE[0].INVOICE_ACTIVITY[i].Id[0]}`;
-        }
-    }
-
-    for (let i = 0; i < jsonBase.INVOICE_RECIPIENTRESOLVER_TABLE[0].INVOICE_RECIPIENTRESOLVER.length; i++) {
-        if (
-            datas.INVOICE_ACTIVITY.temp.indexOf(`pac*${jsonBase.INVOICE_RECIPIENTRESOLVER_TABLE[0].INVOICE_RECIPIENTRESOLVER[i].ActivityId[0]}`) !== -1 &&
-            canProcessDatas("INVOICE_RECIPIENTRESOLVER", jsonBase.INVOICE_RECIPIENTRESOLVER_TABLE[0].INVOICE_RECIPIENTRESOLVER[i])
-        ) {
-            datas.INVOICE_RECIPIENTRESOLVER.datas.push({... jsonBase.INVOICE_RECIPIENTRESOLVER_TABLE[0].INVOICE_RECIPIENTRESOLVER[i]});
-        }
-    }
-
-    for (let i = 0; i < jsonBase.INVOICE_ACTIVITYPARAMETER_TABLE[0].INVOICE_ACTIVITYPARAMETER.length; i++) {
-        if (
-            datas.INVOICE_ACTIVITY.temp.indexOf(`pac*${jsonBase.INVOICE_ACTIVITYPARAMETER_TABLE[0].INVOICE_ACTIVITYPARAMETER[i].ActivityId[0]}`) !== -1 &&
-            canProcessDatas("INVOICE_ACTIVITYPARAMETER", jsonBase.INVOICE_ACTIVITYPARAMETER_TABLE[0].INVOICE_ACTIVITYPARAMETER[i])
-        ) {
-            datas.INVOICE_ACTIVITY_PARAMETER.datas.push({... jsonBase.INVOICE_ACTIVITYPARAMETER_TABLE[0].INVOICE_ACTIVITYPARAMETER[i]});
-        }
-    }
-
-    for (let i = 0; i < jsonBase.INVOICE_TRANSITION_TABLE[0].INVOICE_TRANSITION.length; i++) {
-        if (
-            datas.INVOICE_PROCESS.temp.indexOf(`pid*${jsonBase.INVOICE_TRANSITION_TABLE[0].INVOICE_TRANSITION[i].ProcessId[0]}`) !== -1 &&
-            canProcessDatas("INVOICE_TRANSITION", jsonBase.INVOICE_TRANSITION_TABLE[0].INVOICE_TRANSITION[i])
-        ) {
-            datas.INVOICE_TRANSITION.datas.push({... jsonBase.INVOICE_TRANSITION_TABLE[0].INVOICE_TRANSITION[i]});
-        }
-    }
-
-    /* Invoice Process : END scanning */
-
-    /* System Mapping : START scanning */ 
-    for (let i = 0; i < jsonBase.EXT_IF_BASICDATA_TABLE[0].EXT_IF_BASICDATA.length; i++) {
-        if (
-            jsonBase.EXT_IF_BASICDATA_TABLE[0].EXT_IF_BASICDATA[i].ADMINISTRATIVE_SITE_ID[0] == companyId &&
-            canProcessDatas("EXT_IF_BASICDATA", jsonBase.EXT_IF_BASICDATA_TABLE[0].EXT_IF_BASICDATA[i])
-        ) {
-            datas.EXT_IF_BASICDATA.datas.push({... jsonBase.EXT_IF_BASICDATA_TABLE[0].EXT_IF_BASICDATA[i]});
-            datas.EXT_IF_BASICDATA.temp += `extba*${jsonBase.EXT_IF_BASICDATA_TABLE[0].EXT_IF_BASICDATA[i].Id[0]}`;
-        }
-    }
-
-    for (let i = 0; i < jsonBase.EXT_IF_BASICDATA_MAPPINGS_TABLE[0].EXT_IF_BASICDATA_MAPPINGS.length; i++) {
-        if (
-            jsonBase.EXT_IF_BASICDATA_MAPPINGS_TABLE[0].EXT_IF_BASICDATA_MAPPINGS[i].ADMINISTRATIVE_SITE_ID[0] == companyId &&
-            canProcessDatas("EXT_IF_BASICDATA_MAPPINGS", jsonBase.EXT_IF_BASICDATA_MAPPINGS_TABLE[0].EXT_IF_BASICDATA_MAPPINGS[i])
-        ) {
-            datas.EXT_IF_BASICDATA_MAPPINGS.datas.push({... jsonBase.EXT_IF_BASICDATA_MAPPINGS_TABLE[0].EXT_IF_BASICDATA_MAPPINGS[i]});
-        }
-    }
-
-    for (let i = 0; i < jsonBase.EXT_IF_BASICDATA_CHILDNODES_TABLE[0].EXT_IF_BASICDATA_CHILDNODES.length; i++) {
-        if (
-            jsonBase.EXT_IF_BASICDATA_CHILDNODES_TABLE[0].EXT_IF_BASICDATA_CHILDNODES[i].ADMINISTRATIVE_SITE_ID[0] == companyId &&
-            canProcessDatas("EXT_IF_BASICDATA_CHILDNODES", jsonBase.EXT_IF_BASICDATA_CHILDNODES_TABLE[0].EXT_IF_BASICDATA_CHILDNODES[i])
-        ) {
-            datas.EXT_IF_BASICDATA_CHILDNODES.datas.push({... jsonBase.EXT_IF_BASICDATA_CHILDNODES_TABLE[0].EXT_IF_BASICDATA_CHILDNODES[i]});
-        }
-    }
-
-    for (let i = 0; i < jsonBase.EXT_IF_TRANSFER_RESP_ROUTINES_TABLE[0].EXT_IF_TRANSFER_RESP_ROUTINES.length; i++) {
-        if (
-            jsonBase.EXT_IF_TRANSFER_RESP_ROUTINES_TABLE[0].EXT_IF_TRANSFER_RESP_ROUTINES[i].ADMINISTRATIVE_SITE_ID[0] == companyId &&
-            canProcessDatas("EXT_IF_TRANSFER_RESP_ROUTINES", jsonBase.EXT_IF_TRANSFER_RESP_ROUTINES_TABLE[0].EXT_IF_TRANSFER_RESP_ROUTINES[i])
-        ) {
-            datas.EXT_IF_TRANSFER_RESP_ROUTINES.datas.push({... jsonBase.EXT_IF_TRANSFER_RESP_ROUTINES_TABLE[0].EXT_IF_TRANSFER_RESP_ROUTINES[i]});
-        }
-    }
-
-    for (let i = 0; i < jsonBase.EXT_IF_TRANSFER_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_MAPPINGS.length; i++) {
-        if (
-            jsonBase.EXT_IF_TRANSFER_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_MAPPINGS[i].ADMINISTRATIVE_SITE_ID[0] == companyId &&
-            canProcessDatas("EXT_IF_TRANSFER_MAPPINGS", jsonBase.EXT_IF_TRANSFER_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_MAPPINGS[i])
-        ) {
-            datas.EXT_IF_TRANSFER_MAPPINGS.datas.push({... jsonBase.EXT_IF_TRANSFER_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_MAPPINGS[i]});
-        }
-    }
-
-    for (let i = 0; i < jsonBase.EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_RESP_MAPPINGS.length; i++) {
-        if (
-            jsonBase.EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_RESP_MAPPINGS[i].ADMINISTRATIVE_SITE_ID[0] == companyId &&
-            canProcessDatas("EXT_IF_TRANSFER_RESP_MAPPINGS", jsonBase.EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_RESP_MAPPINGS[i])
-        ) {
-            datas.EXT_IF_TRANSFER_RESP_MAPPINGS.datas.push({... jsonBase.EXT_IF_TRANSFER_RESP_MAPPINGS_TABLE[0].EXT_IF_TRANSFER_RESP_MAPPINGS[i]});
-        }
-    }
-
-    for (let i = 0; i < jsonBase.EXT_IF_TRANSFER_ROUTINES_TABLE[0].EXT_IF_TRANSFER_ROUTINES.length; i++) {
-        if (
-            jsonBase.EXT_IF_TRANSFER_ROUTINES_TABLE[0].EXT_IF_TRANSFER_ROUTINES[i].ADMINISTRATIVE_SITE_ID[0] == companyId &&
-            canProcessDatas("EXT_IF_TRANSFER_ROUTINES", jsonBase.EXT_IF_TRANSFER_ROUTINES_TABLE[0].EXT_IF_TRANSFER_ROUTINES[i])
-        ) {
-            datas.EXT_IF_TRANSFER_ROUTINES.datas.push({... jsonBase.EXT_IF_TRANSFER_ROUTINES_TABLE[0].EXT_IF_TRANSFER_ROUTINES[i]});
-        }
-    }
-
-    for (let i = 0; i < jsonBase.EXT_IF_ORDERIMPORT_MAPPINGS_TABLE[0].EXT_IF_ORDERIMPORT_MAPPINGS.length; i++) {
-        if (
-            jsonBase.EXT_IF_ORDERIMPORT_MAPPINGS_TABLE[0].EXT_IF_ORDERIMPORT_MAPPINGS[i].ADMINISTRATIVE_SITE_ID[0] == companyId &&
-            canProcessDatas("EXT_IF_ORDERIMPORT_MAPPINGS", jsonBase.EXT_IF_ORDERIMPORT_MAPPINGS_TABLE[0].EXT_IF_ORDERIMPORT_MAPPINGS[i])
-        ) {
-            datas.EXT_IF_ORDERIMPORT_MAPPINGS.datas.push({... jsonBase.EXT_IF_ORDERIMPORT_MAPPINGS_TABLE[0].EXT_IF_ORDERIMPORT_MAPPINGS[i]});
-        }
-    }
-
-        for (let i = 0; i < jsonBase.EXT_IF_ORDERIMPORT_ROUTINES_TABLE[0].EXT_IF_ORDERIMPORT_ROUTINES.length; i++) {
-        if (
-            jsonBase.EXT_IF_ORDERIMPORT_ROUTINES_TABLE[0].EXT_IF_ORDERIMPORT_ROUTINES[i].ADMINISTRATIVE_SITE_ID[0] == companyId &&
-            canProcessDatas("EXT_IF_ORDERIMPORT_ROUTINES", jsonBase.EXT_IF_ORDERIMPORT_ROUTINES_TABLE[0].EXT_IF_ORDERIMPORT_ROUTINES[i])
-        ) {
-            datas.EXT_IF_ORDERIMPORT_ROUTINES.datas.push({... jsonBase.EXT_IF_ORDERIMPORT_ROUTINES_TABLE[0].EXT_IF_ORDERIMPORT_ROUTINES[i]});
-        }
-    }
-    //TODO: continue 
-    /* System Mapping : END scanning */
-
-    // Faire un mapping des organisations pour ensuite reprendre les configs
-    for (let i = 0; i < jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT.length; i++) {
-        if (
-            jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT[i].Name[0] == companyName &&
-            canProcessDatas("ORGANIZATION_ELEMENT", jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT[i])
-        ) {
-            datas.ORGANIZATION_ELEMENTS.datas.push({... jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT[i]});
-            if (jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT[i].PurchaseEntityConfigId !== undefined)
-                datas.ORGANIZATION_ELEMENTS.temp += `pec*${jsonBase.ORGANIZATION_TREE_TABLE[0].ORGANIZATION_ELEMENTS[0].ORGANIZATION_ELEMENT[i].PurchaseEntityConfigId[0]}`;
-        }
-    }
-
-    /* Entity Mapping : START scanning */
-    
-    for (let i = 0; i < jsonBase.CMN_ENTITY_CONFIG_TABLE[0].CMN_ENTITY_CONFIG.length; i++) {
-        if (
-            datas.ORGANIZATION_ELEMENTS.temp.indexOf(`pec${jsonBase.CMN_ENTITY_CONFIG_TABLE[0].CMN_ENTITY_CONFIG[i].ID[0]}`) != -1 &&
-            canProcessDatas("CMN_ENTITY_CONFIG", jsonBase.CMN_ENTITY_CONFIG_TABLE[0].CMN_ENTITY_CONFIG[i])
-        ) {
-            datas.CMN_ENTITY_CONFIG.datas.push({... jsonBase.CMN_ENTITY_CONFIG_TABLE[0].CMN_ENTITY_CONFIG[i]});
-            datas.CMN_ENTITY_CONFIG.temp += `cid*${jsonBase.CMN_ENTITY_CONFIG_TABLE[0].CMN_ENTITY_CONFIG[i].ID[0]}`;
-        }
-    }
-    /* Entity Mapping : END scanning */
-
-    return datas;
 }
 
 function getJSONItems(datas, key) {
@@ -491,7 +457,7 @@ function getJSONItems(datas, key) {
 }
 
 function IntegrateSubDatasInXmlSection(finalJson, jsonKey, json) {
-    if (jsonKey !== "ORGANIZATION_ELEMENTS") return {
+    if (jsonKey !== "ORGANIZATION_ELEMENT") return {
         ...finalJson.CT,
         [json[jsonKey].tagsBefore[0]]: getJSONItems(json[jsonKey].datas, jsonKey)
     };
@@ -520,7 +486,7 @@ function formatHistoricJSONAfterTreatment(json) {
 }
 
 function preFormatageHistoric(json) {
-    const datas = generateFinalJsonBasicStructure();
+    const datas = generateFileInspectionBasicStructures();
 
     for (const jsonPart of json) {
         for (const key of Object.keys(jsonPart)) {
@@ -531,12 +497,12 @@ function preFormatageHistoric(json) {
     return datas;
 }
 
-function generateGlobalHistoricFile(json) {
+function generateFilteredHistoricFile(json) {
     const chosedOrganizations = document.querySelectorAll(".organizationSelected[data-chosed='1']");
     const finalResult = [];
 
     for (const chosedOrganizationsHTML of chosedOrganizations) {
-        finalResult.push(inspectFile(json, chosedOrganizationsHTML.getAttribute("data-id"), chosedOrganizationsHTML.getAttribute("data-name")));
+        finalResult.push(processHistoricDataFile(json, chosedOrganizationsHTML.getAttribute("data-id"), chosedOrganizationsHTML.getAttribute("data-name")));
     }
 
     return formatHistoricJSONAfterTreatment(preFormatageHistoric(finalResult));

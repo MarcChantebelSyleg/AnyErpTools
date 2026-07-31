@@ -3,13 +3,27 @@ const historicFileAllDatas = document.getElementById("historicFileAllDatas")
 const CallHistoricFileAllDatas = document.getElementById("CallHistoricFileAllDatas");
 const selectAll = document.getElementById("selectAll");
 const writeOptions = document.getElementsByClassName("writeOption");
+const takesTagOrNot = document.getElementsByClassName("takeTagOrNot");
 
 selectAll.addEventListener("click", (e) => {
     const allInputs = document.querySelectorAll(".organizationSelected input[type='checkbox']");
 
     for (const input of allInputs) {
-        input.checked = true;
-        input.parentNode.setAttribute("data-chosed", "1");
+        if (!input.parentNode.classList.contains("d-none")) {
+            input.checked = true;
+            input.parentNode.setAttribute("data-chosed", "1");
+        }
+    }
+}, false);
+
+document.getElementById("unSelectAll").addEventListener("click", (e) => {
+    const allInputs = document.querySelectorAll(".organizationSelected input[type='checkbox']");
+
+    for (const input of allInputs) {
+        if (!input.parentNode.classList.contains("d-none")) {
+            input.checked = false;
+            input.parentNode.setAttribute("data-chosed", "0");
+        }
     }
 }, false);
 
@@ -47,6 +61,24 @@ for (const writeOption of writeOptions) {
     }, false);
 }
 
+for (const takeTagOrNot of takesTagOrNot) {
+    takeTagOrNot.addEventListener("click", (e) => {
+        const target = e.currentTarget;
+
+        if (target.getAttribute("data-take-tag") == "1") {
+            target.setAttribute("data-take-tag", "0");
+            target.setAttribute("title", "Cliquez ici pour traiter cette balise");
+            target.src = "./img/takeTag.png";
+        } else {
+            target.setAttribute("data-take-tag", "1");
+            target.setAttribute("title", "Cliquez ici pour ne pas traiter cette balise");
+            target.src = "./img/notTakeTag.png";
+        };
+
+        target.parentNode.setAttribute("data-take-tag", target.getAttribute("data-take-tag"));
+    }, false);
+}
+
 document.getElementById("CallHistoricFileOrganizations").addEventListener("click", (e) => {
     historicFileOrganizations.click();
 }, false);
@@ -62,7 +94,6 @@ historicFileOrganizations.addEventListener("change", (e) => {
         fileReader.readAsText(e.currentTarget.files[0]);
         fileReader.onload = async (fr) => {
             const result = await window.electronAPIXMLHistoricImportExport.transformHistoric(fr.target.result, true);
-            console.log(result);
 
             if (result.isOk) displayAllOrganizations(result.json);
             else toastr.error("Impossible de parser correctement le fichier XML");
@@ -91,7 +122,7 @@ historicFileAllDatas.addEventListener("change", (e) => {
             const result = await window.electronAPIXMLHistoricImportExport.transformHistoric(fr.target.result, true);
 
             if (result.isOk) {
-                const finalResult = generateGlobalHistoricFile(result.json);
+                const finalResult = generateFilteredHistoricFile(result.json);
                 const xmlFinalResult =
                     await window.electronAPIXMLHistoricImportExport.transformHistoric(finalResult, false);
 
