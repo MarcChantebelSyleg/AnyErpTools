@@ -20,7 +20,9 @@ AnyERPTools-electron/
 
 ## Installation
 
-Prérequis : [Node.js](https://nodejs.org/) installé en version portable.
+Prérequis : Installer python (s'assurer que pip existe ainsi que la saxonche soit installé)
+py install pip (Installer pip)
+pip install saxonche lxml (Installer Saxonche)
 Système Windows uniquement
 
 ## Lancer l'application
