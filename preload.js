@@ -19,6 +19,11 @@ contextBridge.exposeInMainWorld('electronAPISaveHistoricalFile', {
     ipcRenderer.invoke('save-historic-file', content)
 });
 
+contextBridge.exposeInMainWorld('electronAPIUblInspector', {
+  launchUblInspector: (filePath) =>
+    ipcRenderer.invoke('launch-ubl-inspector', filePath)
+});
+
 contextBridge.exposeInMainWorld('appInfo', {
   isElectron: true
-})
+});

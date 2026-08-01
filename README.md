@@ -1,6 +1,6 @@
 # AnyERP Tools (Electron)
 
-Application de bureau Electron générée à partir du fichier `AnyERPTools.html`.
+Application de bureau Electron générée à partir du fichier `index.html`.
 
 ## Structure du projet
 
