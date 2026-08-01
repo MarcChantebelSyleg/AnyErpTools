@@ -150,7 +150,7 @@ ipcMain.handle('save-historic-file', async (event, datas) => {
 });
 
 ipcMain.handle('launch-ubl-inspector', async (event, filePath) => {
-  const child = spawn("py", ["../other_scripts/valider_ubl_1.1.py", filePath]);
+  const child = spawn("py", ["./other_scripts/valider_ubl_1.1.py", filePath]);
   let stderr = "";
   let stdout = "";
 
