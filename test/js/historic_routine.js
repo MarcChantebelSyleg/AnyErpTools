@@ -256,7 +256,8 @@ function getFileTagsList() {
         "INVOICE_ACTIVITYPARAMETER", "INVOICE_TRANSITION", "EXT_IF_BASICDATA", "EXT_IF_BASICDATA_MAPPINGS",
         "EXT_IF_BASICDATA_CHILDNODES", "EXT_IF_TRANSFER_RESP_ROUTINES", "EXT_IF_TRANSFER_MAPPINGS",
         "EXT_IF_TRANSFER_RESP_MAPPINGS", "EXT_IF_TRANSFER_ROUTINES", "EXT_IF_ORDERIMPORT_MAPPINGS",
-        "EXT_IF_ORDERIMPORT_ROUTINES", "ORGANIZATION_ELEMENT", "CMN_ENTITY_CONFIG"
+        "EXT_IF_ORDERIMPORT_ROUTINES", "ORGANIZATION_ELEMENT", "CMN_ENTITY_CONFIG", "CMN_ENTITY_TYPE_CONFIG",
+        "CMN_ENTITY_CONFIG_ITEM", "CMN_EDIT_VIEW_ITEM", "CMN_EDIT_TYPE_VIEW", "CMN_EDIT_VIEW"
     ];
 }
 
@@ -281,6 +282,18 @@ function getTagAncestors(key) {
     switch (key) {
         case "CMN_ENTITY_CONFIG":
             return ["CMN_ENTITY_CONFIG_TABLE"];
+        case "CMN_ENTITY_TYPE_CONFIG":
+            return ["CMN_ENTITY_TYPE_CONFIG_TABLE"];
+        case "CMN_ENTITY_CONFIG_ITEM":
+            return ["CMN_ENTITY_CONFIG_ITEM_TABLE"];
+        case "CMN_ENTITY_DIFFERENCE_CALC":
+            return ["CMN_ENTITY_DIFFERENCE_CALC_TABLE"];
+        case "CMN_EDIT_VIEW_ITEM":
+            return ["CMN_EDIT_VIEW_ITEM_TABLE"];
+        case "CMN_EDIT_TYPE_VIEW":
+            return ["CMN_EDIT_TYPE_VIEW_TABLE"];
+        case "CMN_EDIT_VIEW":
+            return ["CMN_EDIT_VIEW_TABLE"];
         case "INVOICE_PROCESS":
             return ["INVOICE_PROCESS_TABLE"];
         case "INVOICE_ACTIVITY":
@@ -319,46 +332,68 @@ function getTagAncestors(key) {
 function getTagSearchOptions(key) {
     switch(key) {
         case "INVOICE_PROCESS":
-            return {prefix: "pid", tag: "Id", optionnal: false};
+            return {prefix: "pid", tag: "Id"};
         case "INVOICE_ACTIVITY":
-            return {prefix: "pac", tag: "Id", optionnal: false, findRelevantDataInOtherTag: {
+            return {prefix: "pac", tag: "Id", findRelevantDataInOtherTag: {
                 prefix: "pid", entity: "INVOICE_PROCESS", key: "ProcessId"
             }};
         case "INVOICE_RECIPIENTRESOLVER":
-            return {optionnal: true, findRelevantDataInOtherTag: {
+            return {findRelevantDataInOtherTag: {
                 prefix: "pac", entity: "INVOICE_ACTIVITY", key: "ActivityId"
             }}
         case "INVOICE_ACTIVITYPARAMETER":
-            return {optionnal: true, findRelevantDataInOtherTag: {
+            return {findRelevantDataInOtherTag: {
                 prefix: "pac", entity: "INVOICE_ACTIVITY", key: "ActivityId"
             }}
         case "INVOICE_TRANSITION":
-            return {optionnal: true, findRelevantDataInOtherTag: {
+            return {findRelevantDataInOtherTag: {
                 prefix: "pid", entity: "INVOICE_PROCESS", key: "ProcessId"
             }};
         case "EXT_IF_BASICDATA":
-            return {prefix: "extba", tag: "ID", optionnal: false};
+            return {};
         case "EXT_IF_BASICDATA_MAPPINGS":
-            return {optionnal: true};
+            return {};
         case "EXT_IF_BASICDATA_CHILDNODES":
-            return {optionnal: true};
+            return {};
         case "EXT_IF_TRANSFER_RESP_ROUTINES":
-            return {optionnal: true};
+            return {};
         case "EXT_IF_TRANSFER_MAPPINGS":
-            return {optionnal: true};
+            return {};
         case "EXT_IF_TRANSFER_RESP_MAPPINGS":
-            return {optionnal: true};
+            return {};
         case "EXT_IF_TRANSFER_ROUTINES":
-            return {optionnal: true};
+            return {};
         case "EXT_IF_ORDERIMPORT_MAPPINGS":
-            return {optionnal: true};
+            return {};
         case "EXT_IF_ORDERIMPORT_ROUTINES":
-            return {optionnal: true};
+            return {};
         case "ORGANIZATION_ELEMENT":
-            return {prefix: "pec", tag: "PurchaseEntityConfigId", optionnal: true};
+            return {prefix: "oe", tag: "PurchaseEntityConfigId"};
         case "CMN_ENTITY_CONFIG":
-            return {prefix: "pac", tag: "ID", optionnal: false, findRelevantDataInOtherTag: {
-                prefix: "pec", entity: "ORGANIZATION_ELEMENT", key: "ID"
+            return {prefix: "ec", tag: "ID", noOptionsBefore: true};
+        case "CMN_ENTITY_TYPE_CONFIG":
+            return {prefix: "etc", tag: "ID", findRelevantDataInOtherTag: {
+                prefix: "ec", entity: "CMN_ENTITY_CONFIG", key: "ENTITY_CONFIG_ID"
+            }};
+        case "CMN_ENTITY_CONFIG_ITEM":
+            return {prefix: "eci", tag: "ID", findRelevantDataInOtherTag: {
+                prefix: "etc", entity: "CMN_ENTITY_TYPE_CONFIG", key: "ENTITY_TYPE_CONFIG_ID"
+            }};
+        case "CMN_ENTITY_DIFFERENCE_CALC":
+            return {findRelevantDataInOtherTag: {
+                prefix: "ec", entity: "CMN_ENTITY_CONFIG", key: "ENTITY_CONFIG_ID"
+            }};
+        case "CMN_EDIT_VIEW_ITEM":
+            return {prefix: ["evi", "si"], tag: ["EDIT_TYPE_VIEW_ID", "SCHEMA_ITEM_ID"], optionnal: true, findRelevantDataInOtherTag: {
+                prefix: "eci", entity: "CMN_ENTITY_CONFIG_ITEM", key: "ENTITY_CONFIG_ITEM_ID"
+            }}
+        case "CMN_EDIT_TYPE_VIEW":
+            return {prefix: "etv", tag: "EDIT_VIEW_ID", findRelevantDataInOtherTag:  {
+                prefix: "evi", entity: "CMN_EDIT_VIEW_ITEM", key: "ID"
+            }};
+        case "CMN_EDIT_VIEW":
+            return {findRelevantDataInOtherTag: {
+                prefix: "etv", entity: "CMN_EDIT_TYPE_VIEW", key: "ID"
             }};
         default:
             console.warn(`Aucune valeur pour la clé : " ${key}`);
@@ -381,13 +416,13 @@ function processHistoricDataFileForSpecificTag(
             if (
                 (
                     (
-                        tagSearchOptions.findRelevantDataInOtherTag &&
+                        !tagSearchOptions.noOptionsBefore && tagSearchOptions.findRelevantDataInOtherTag &&
                         runningFilterDatas[tagSearchOptions.findRelevantDataInOtherTag.entity].temp.
                             indexOf(`${tagSearchOptions.findRelevantDataInOtherTag.prefix}*${tags[i][tagSearchOptions.findRelevantDataInOtherTag.key][0]}`) !== -1
                     )
                     || 
                     (
-                        !tagSearchOptions.findRelevantDataInOtherTag && (
+                        !tagSearchOptions.noOptionsBefore && !tagSearchOptions.findRelevantDataInOtherTag && (
                             (
                                 companyId && tags[i].AdministrativeSiteId && tags[i].AdministrativeSiteId[0] == companyId ||
                                 companyId && tags[i].ADMINISTRATIVE_SITE_ID && tags[i].ADMINISTRATIVE_SITE_ID[0] == companyId
@@ -395,11 +430,22 @@ function processHistoricDataFileForSpecificTag(
                             companyName && tags[i].Name[0] == companyName
                         )
                     )
+                    || tagSearchOptions.noOptionsBefore
                 ) && canProcessDatas(tag, tags[i])
             ) {
                 treatedJson.datas.push({... tags[i]});
-                if (tagSearchOptions && (!tagSearchOptions.optionnal || tags[i][tagSearchOptions.tag] !== undefined))
-                    treatedJson.temp += `${tagSearchOptions.prefix}*${tags[i][tagSearchOptions.tag][0]}`;
+                if (tagSearchOptions.prefix !== undefined) { // On met en donnée temporaire
+                    if (typeof tagSearchOptions.prefix == "string") {
+                        if (tags[i][tagSearchOptions.tag] !== undefined) {
+                            treatedJson.temp += `${tagSearchOptions.prefix}*${tags[i][tagSearchOptions.tag][0]}`;
+                        }
+                    } else {
+                        for (let x = 0; x < tagSearchOptions.prefix.length; x++) {
+                            if (tags[i][tagSearchOptions.tag[i]] !== undefined)
+                                treatedJson.temp += `${tagSearchOptions.prefix[i]}*${tags[i][tagSearchOptions.tag[i]][0]}`;
+                        }
+                    }
+                }
             }
         }
     }
@@ -458,9 +504,18 @@ function mapExtractOptions(HTMLExtractOptions) {
 
 function getJSONItems(datas, key) {
     const items = [];
+    const existingIds = [];
 
     for (const data of datas) {
-        items.push({[key] : {... data}});
+        if (data.ID && !existingIds.includes(data.ID[0])) {
+            existingIds.push(data.ID[0]);
+            items.push({[key] : {... data}});
+        }
+
+        if (data.Id && !existingIds.includes(data.Id[0])) {
+            existingIds.push(data.Id[0]);
+            items.push({[key] : {... data}});
+        }
     }
 
     return items;

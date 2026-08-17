@@ -111,29 +111,35 @@ CallHistoricFileAllDatas.addEventListener("click", (e) => {
 }, false);
 
 historicFileAllDatas.addEventListener("change", (e) => {
+    const entitysToChoose = document.querySelectorAll(`div.extractOption[data-xml-name="CMN_ENTITY_CONFIG"] .extractOptions`);
+
     if (!window.electronAPIXMLHistoricImportExport) {
         toastr.error("Cette option n'est disponible que si l'application est reliée à une API electron");
-        return;
+    } else if (entitysToChoose.length == 0) {
+        toastr.error("Choisissez au moins une entité à extraire (facture / demande d'achat)");
+    } else {
+        try {
+            const fileReader = new FileReader();
+            fileReader.readAsText(e.currentTarget.files[0]);
+            fileReader.onload = async (fr) => {
+                progress.classList.remove("d-none");
+                const result = await window.electronAPIXMLHistoricImportExport.transformHistoric(fr.target.result, true);
+
+                if (result.isOk) {
+                    const finalResult = generateFilteredHistoricFile(result.json);
+                    const xmlFinalResult =
+                        await window.electronAPIXMLHistoricImportExport.transformHistoric(finalResult, false);
+
+                    window.electronAPISaveHistoricalFile.saveHistoricFile(xmlFinalResult);
+                } else toastr.error("Impossible de parser correctement le fichier XML");
+
+                document.getElementById("historicInput2").reset();
+            };
+        } catch(err) {
+            toastr.error(err.message);
+        }
     }
 
-    try {
-        const fileReader = new FileReader();
-        fileReader.readAsText(e.currentTarget.files[0]);
-        fileReader.onload = async (fr) => {
-            progress.classList.remove("d-none");
-            const result = await window.electronAPIXMLHistoricImportExport.transformHistoric(fr.target.result, true);
-
-            if (result.isOk) {
-                const finalResult = generateFilteredHistoricFile(result.json);
-                const xmlFinalResult =
-                    await window.electronAPIXMLHistoricImportExport.transformHistoric(finalResult, false);
-
-                window.electronAPISaveHistoricalFile.saveHistoricFile(xmlFinalResult);
-            } else toastr.error("Impossible de parser correctement le fichier XML");
-
-            document.getElementById("historicInput2").reset();
-        };
-    } catch(err) {
-        toastr.error(err.message);
-    }
+    document.getElementById("historicInput1").reset();
+    document.getElementById("historicInput2").reset();
 }, false);
